@@ -7,7 +7,7 @@ The server
 The server address is:
 
 ```
-ws://vhost3.lnu.se:20080/socket/
+wss://courselab.lnu.se/message-app/socket
 ```
 
 You connect to the server via web sockets and send messages using the json format:
