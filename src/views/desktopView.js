@@ -8,7 +8,7 @@ function createDesktop () {
   dsktp.id = 'desktop'
   dsktp.style.width = '100vw'
   dsktp.style.height = '100vh'
-  dsktp.style.margin = '2%'
+  dsktp.style.padding = '1.6rem'
   dsktp.appendChild(createIconMenu())
   document.body.appendChild(dsktp)
   document.body.style.backgroundColor = 'lightgrey'
@@ -24,12 +24,12 @@ function createIconMenu () {
   iconWrapper.id = 'iconContainer'
   iconWrapper.style.display = 'flex'
   iconWrapper.style.flexDirection = 'row'
-  iconWrapper.style.border = '1px solid black'
-  iconWrapper.style.borderRadius = '10px'
+  iconWrapper.style.border = '0.1rem solid black'
+  iconWrapper.style.borderRadius = '1rem'
   iconWrapper.style.width = 'fit-content'
-  iconWrapper.style.height = '50px'
-  iconWrapper.style.padding = '5px'
-  const imgFilenames = ['settings', 'message', 'dice']
+  iconWrapper.style.height = '5rem'
+  iconWrapper.style.padding = '0.5rem'
+  const imgFilenames = ['settings', 'dice', 'message']
   for (let i = 0; i < 3; i++) {
     iconWrapper.appendChild(createIcon(imgFilenames[i]))
   }
@@ -46,9 +46,9 @@ function createIconMenu () {
 function createIcon (imgFilename) {
   const icon = document.createElement('div')
   icon.id = imgFilename
-  icon.style.height = '40px'
-  icon.style.width = '40px'
-  icon.style.margin = '5px'
+  icon.style.height = '4rem'
+  icon.style.width = '4rem'
+  icon.style.margin = '0.5rem'
   icon.appendChild(setIconImg(imgFilename))
 
   return icon
@@ -63,7 +63,8 @@ function createIcon (imgFilename) {
  */
 function setIconImg (imgFilename) {
   const img = document.createElement('img')
-  img.src = `/images/${imgFilename}.svg`
+  img.src = `/images/icons/${imgFilename}.svg`
+  img.alt = imgFilename
   img.style.height = '100%'
   img.style.width = '100%'
   img.style.objectFit = 'contain'

@@ -1,4 +1,10 @@
-* {
+html {
+    font-size: 10px;
     text-decoration: none;
     margin: 0;
-  }
+    overflow: hidden;
+}
+
+@media (max-width: 900px) { 
+  html { font-size: 8px; }
+}
