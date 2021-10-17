@@ -4,13 +4,33 @@
  * Creates a window for applications.
  *
  * @param {string} idOfWindow Id of the window, equal to application name and # of application instance
+ *
+ * @returns {HTMLDivElement} Window
  */
 function createWindow (idOfWindow) {
   const window = document.createElement('div')
   window.id = idOfWindow
   window.style.border = '1px solid black'
-  window.style.width = '200px'
-  window.style.height = '150px'
+  window.style.width = '80rem'
+  window.style.height = '60rem'
+  window.appendChild(createCloseButton(window.id))
+  return window
+}
+
+/**
+ * Creates a button to close current window.
+ *
+ * @param {string} idOfRoot Id of root element
+ *
+ * @returns {HTMLButtonElement} Button for closing/deleting a node
+ */
+function createCloseButton (idOfRoot) {
+  const closeBtn = document.createElement('button')
+  closeBtn.id = `close-${idOfRoot}`
+  closeBtn.addEventListener('click', event => {
+    document.getElementById('desktop').removeChild(closeBtn.id.split('-')[1])
+  })
+  return closeBtn
 }
 
 /**
@@ -21,7 +41,7 @@ function createWindow (idOfWindow) {
  */
 // eslint-disable-next-line no-unused-vars
 function appendApplication (windowId, app) {
-  document.getElementById(windowId).appendChild(app)
+  document.getElementById(windowId).append(app)
 }
 
 export {

@@ -4,6 +4,11 @@ export class Card {
   constructor (image) {
     this.img = image
     this.matched = false
+    this.flipped = false
+  }
+
+  flip () {
+    this.flipped = true
   }
 
   isMatched () {

@@ -12,5 +12,5 @@ const filenameOfCards = [
   '5', '5', '6', '6',
   '7', '7', '8', '8'
 ]
-
 let matchedCards = []
+let firstCard, secondCard

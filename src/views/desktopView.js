@@ -1,5 +1,7 @@
 'use strict'
 
+// Imports
+
 /**
  * Creates desktop div and appends to body.
  */
@@ -44,8 +46,9 @@ function createIconMenu () {
  * @returns {HTMLDivElement} Container for icon
  */
 function createIcon (imgFilename) {
-  const icon = document.createElement('div')
+  const icon = document.createElement('button')
   icon.id = imgFilename
+  icon.classList.add('menuIcon')
   icon.style.height = '4rem'
   icon.style.width = '4rem'
   icon.style.margin = '0.5rem'

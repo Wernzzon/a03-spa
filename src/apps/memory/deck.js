@@ -21,4 +21,8 @@ export class Deck {
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value)]
   }
+
+  getDeck () {
+    return this.deckOfCards
+  }
 }
