@@ -2,6 +2,7 @@
 // Imports
 import { createDesktop } from './views/desktopView'
 import { createWindow } from './views/windowView'
+import { helper } from './helpers/dragAndDropHelper'
 
 window.addEventListener('load', main)
 const settingsCounter = ['settings', 0]
@@ -12,6 +13,7 @@ const diceCounter = ['dice', 0]
  * Creates desktop.
  */
 function main () {
+  document.title = 'PWA'
   createDesktop()
   addEventListeners()
 }
@@ -22,8 +24,9 @@ function main () {
 function addEventListeners () {
   document.querySelectorAll('.menuIcon').forEach(item => {
     item.addEventListener('click', event => {
-      counterForApplicationInstances(item.id, true)
-      document.getElementById('desktop').appendChild(createWindow(item.id))
+      const instanceNumber = counterForApplicationInstances(item.id, true)
+      document.getElementById('desktop').appendChild(createWindow(`${item.id}${instanceNumber}`))
+      helper(`${item.id}${instanceNumber}`)
     })
   })
 }
@@ -33,11 +36,12 @@ function addEventListeners () {
  *
  * @param {string} param Name of application
  * @param {boolean} addOrRemove True if a new instance is created, else false
+ *
+ * @returns {number} Returns number of instance if instance is added
  */
 function counterForApplicationInstances (param, addOrRemove) {
   if (addOrRemove) {
-    addInstance(param)
-    return
+    return addInstance(param)
   }
 
   removeInstance(param)
@@ -47,20 +51,20 @@ function counterForApplicationInstances (param, addOrRemove) {
  * Add one instance to application counter.
  *
  * @param {string} param Name of application
+ *
+ * @returns {number} Returns number of instance
  */
 function addInstance (param) {
   if (param === settingsCounter[0]) {
-    settingsCounter[1]++
-    return
+    return settingsCounter[1]++
   }
 
   if (param === messageCounter[0]) {
-    messageCounter[1]++
-    return
+    return messageCounter[1]++
   }
 
   if (param === diceCounter[0]) {
-    diceCounter[1]++
+    return diceCounter[1]++
   }
 }
 

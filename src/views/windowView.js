@@ -10,9 +10,8 @@
 function createWindow (idOfWindow) {
   const window = document.createElement('div')
   window.id = idOfWindow
-  window.style.border = '1px solid black'
-  window.style.width = '80rem'
-  window.style.height = '60rem'
+  window.classList.add('draggableWindow')
+  window.draggable = true
   window.appendChild(createCloseButton(window.id))
   return window
 }
@@ -28,7 +27,7 @@ function createCloseButton (idOfRoot) {
   const closeBtn = document.createElement('button')
   closeBtn.id = `close-${idOfRoot}`
   closeBtn.addEventListener('click', event => {
-    document.getElementById('desktop').removeChild(closeBtn.id.split('-')[1])
+    closeBtn.parentNode.parentNode.removeChild(closeBtn.parentNode)
   })
   return closeBtn
 }
