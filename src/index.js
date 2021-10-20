@@ -2,7 +2,7 @@
 // Imports
 import { createDesktop } from './views/desktopView'
 import { createWindow } from './views/windowView'
-import { helper } from './helpers/dragAndDropHelper'
+import { setEventsForId, setParams } from './helpers/dragAndDropHelper'
 
 window.addEventListener('load', main)
 const settingsCounter = ['settings', 0]
@@ -26,7 +26,8 @@ function addEventListeners () {
     item.addEventListener('click', event => {
       const instanceNumber = counterForApplicationInstances(item.id, true)
       document.getElementById('desktop').appendChild(createWindow(`${item.id}${instanceNumber}`))
-      helper(`${item.id}${instanceNumber}`)
+      setParams(`${item.id}${instanceNumber}`)
+      setEventsForId(`${item.id}${instanceNumber}`)
     })
   })
 }
