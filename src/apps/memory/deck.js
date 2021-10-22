@@ -1,7 +1,7 @@
 'use strict'
 
 // Imports
-import Card from './card'
+import { Card } from './card'
 
 export class Deck {
   constructor (numberOfCards) {
@@ -11,15 +11,20 @@ export class Deck {
 
   makeTheDeck (filenames) {
     for (let i = 0; i < this.numberOfCards; i++) {
-      this.deckOfCards.push(new Card(filenames[i]))
+      this.deckOfCards.push(new Card(filenames[i], '0'))
     }
   }
 
   shuffle () {
-    return [...this.numberOfCards
+    return [...this.deckOfCards
       .map((value) => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value)]
+  }
+
+  initDeck (filenames) {
+    this.makeTheDeck(filenames)
+    this.deckOfCards = this.shuffle()
   }
 
   getDeck () {

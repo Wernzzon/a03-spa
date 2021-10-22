@@ -5,13 +5,11 @@ let dropArea
 /**
  * Drag start.
  *
- * @param {undefined} e Nothing
+ * @param {undefined} e Event
  */
 function dragStart (e) {
-  // e.dataTransfer.setData('text/plain', e.target.id)
-
   const style = window.getComputedStyle(e.target, null)
-  e.dataTransfer.setData('text/plain',
+  e.dataTransfer.setData('text/html text/javascript image/png',
     (parseInt(style.getPropertyValue('left'), 10) - e.clientX) + ',' +
     (parseInt(style.getPropertyValue('top'), 10) - e.clientY)
   )
@@ -22,7 +20,7 @@ function dragStart (e) {
 /**
  * Drag Enter.
  *
- * @param {undefined} e Nothing
+ * @param {undefined} e Event
  */
 function dragEnter (e) {
   e.preventDefault()
@@ -31,28 +29,22 @@ function dragEnter (e) {
 /**
  * Drag Over.
  *
- * @param {undefined} e Nothing
+ * @param {undefined} e Event
  *
- * @returns {boolean} False
  */
 function dragOver (e) {
   e.preventDefault()
   e.dataTransfer.dropEffect = 'move'
-  return false
 }
 
 /**
  * Drop.
  *
- * @param {undefined} e Nothing
+ * @param {undefined} e Event
  *
  */
 function drop (e) {
-  // const id = e.dataTransfer.getData('text/plain')
-  // const draggable = document.getElementById(id)
-  // e.target.appendChild(draggable)
-
-  const offset = e.dataTransfer.getData('text/plain').split(',')
+  const offset = e.dataTransfer.getData('text/html text/javascript image/png').split(',')
 
   item.style.left = (e.clientX + parseInt(offset[0], 10)) + 'px'
   item.style.top = (e.clientY + parseInt(offset[1], 10)) + 'px'
@@ -62,10 +54,8 @@ function drop (e) {
 
 /**
  * Sets all listeners for the specified id.
- *
- * @param {string} itemId Id
  */
-function setEventsForId (itemId) {
+function setEventsForId () {
   item.addEventListener('dragstart', dragStart)
 
   dropArea.addEventListener('dragenter', dragEnter)
@@ -88,10 +78,3 @@ export {
   setEventsForId,
   setParams
 }
-
-// Skriva avtal - tid? Dagen jag börjar
-// Vilket fack?
-//    fackligt ombud? - Transport - Fora
-// Prata om mitt schema
-//    kan självklart komma in andra dagar några timmar här o där
-//    kan skicka hela schemat

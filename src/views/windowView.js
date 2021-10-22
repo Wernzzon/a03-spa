@@ -26,9 +26,8 @@ function createWindow (idOfWindow) {
 function createCloseButton (idOfRoot) {
   const closeBtn = document.createElement('button')
   closeBtn.id = `close-${idOfRoot}`
-  closeBtn.addEventListener('click', event => {
-    closeBtn.parentNode.parentNode.removeChild(closeBtn.parentNode)
-  })
+  closeBtn.classList.add('close')
+  closeBtn.textContent = 'Close'
   return closeBtn
 }
 
@@ -38,11 +37,11 @@ function createCloseButton (idOfRoot) {
  * @param {string} windowId Id of window to append to
  * @param {HTMLDivElement} app Application container to append
  */
-// eslint-disable-next-line no-unused-vars
 function appendApplication (windowId, app) {
-  document.getElementById(windowId).append(app)
+  document.getElementById(windowId).appendChild(app)
 }
 
 export {
-  createWindow
+  createWindow,
+  appendApplication
 }
