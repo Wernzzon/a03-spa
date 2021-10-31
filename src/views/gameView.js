@@ -3,24 +3,15 @@
 import { options, makeLayout } from '../apps/memory/layout'
 import { Deck } from '../apps/memory/deck'
 
-const filenameOfCards = [
-  '1', '1', '2', '2',
-  '3', '3', '4', '4',
-  '5', '5', '6', '6',
-  '7', '7', '8', '8'
-]
-
 let choosenLayout = 16
 
 /**
  * Bind the cards to their cardholder.
  *
- * @returns {HTMLDivElement} Grid with cards.
+ * @param {Deck} deck Deck of cards
+ * @returns {HTMLDivElement} Grid with cards
  */
-export function bindCardsToCardHolder () {
-  const deck = new Deck(choosenLayout)
-  deck.initDeck(filenameOfCards)
-
+function bindCardsToCardHolder (deck) {
   const grid = makeLayout(choosenLayout, deck.getDeck())
 
   return grid
@@ -49,4 +40,19 @@ function giveOptions () {
   container.appendChild(inst)
   container.appendChild(wrapper)
   return container
+}
+
+/**
+ * Returns user choosen layout.
+ *
+ * @returns {number} Layout option to return
+ */
+function getLayoutOption () {
+  return choosenLayout
+}
+
+export {
+  bindCardsToCardHolder,
+  giveOptions,
+  getLayoutOption
 }

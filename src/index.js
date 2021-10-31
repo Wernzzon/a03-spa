@@ -2,7 +2,7 @@
 // Imports
 import { createDesktop } from './views/desktopView'
 import { createWindow, appendApplication } from './views/windowView'
-import { bindCardsToCardHolder } from './views/gameView'
+import { startGame } from './apps/memory/gameLogic'
 import { setEventsForId, setParams } from './helpers/dragAndDropHelper'
 
 window.addEventListener('load', main)
@@ -27,7 +27,7 @@ function addEventListeners () {
     item.addEventListener('click', event => {
       const instanceNumber = addInstance(item.id)
       document.getElementById('desktop').appendChild(createWindow(`${item.id}${instanceNumber}`))
-      appendApplication(`${item.id}${instanceNumber}`, bindCardsToCardHolder())
+      appendApplication(`${item.id}${instanceNumber}`, startGame())
       setParams(`${item.id}${instanceNumber}`)
       setEventsForId()
       addEventToCloseBtn(`${item.id}${instanceNumber}`, item.id)

@@ -7,8 +7,8 @@ html {
 }
 
 body {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   text-decoration: none;
   margin: 0;
   overflow-x: hidden;
@@ -58,7 +58,7 @@ body {
   position: relative;
   left: 7.5rem;
   width: 45rem;
-  height: 30rem;
+  height: 35rem;
   display: flex;
   flex-wrap: wrap;
   perspective: 100rem;
@@ -81,7 +81,8 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
   transform: rotateY(180deg);
 }
 
@@ -89,5 +90,6 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
 }

@@ -10,15 +10,22 @@
     "clean": "rm -rf build/ node_modules/"
   },
   "devDependencies": {
-    "@lnu/eslint-config": "^1.1.0",
-    "eslint": "^7.9.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jsdoc": "^30.5.1",
+    "@babel/core": "^7.15.8",
+    "@babel/eslint-parser": "^7.15.8",
+    "@lnu/eslint-config": "^1.1.4",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsdoc": "^37.0.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.1",
     "eslint-plugin-standard": "^4.0.1",
     "htmlhint": "^0.15.2",
-    "snowpack": "^2.13.3",
+    "snowpack": "^3.8.8",
     "standard": "*",
     "stylelint": "^13.7.1"
+  },
+  "dependencies": {
+    "postcss": "^8.3.11"
   }
 }

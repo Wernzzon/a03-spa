@@ -6,6 +6,8 @@
  * Creates desktop div and appends to body.
  */
 function createDesktop () {
+  document.body.style.width = window.innerWidth
+  document.body.style.height = window.innerHeight
   const dsktp = document.createElement('div')
   dsktp.id = 'desktop'
   dsktp.appendChild(createIconMenu())
