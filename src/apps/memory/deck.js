@@ -21,10 +21,11 @@ export class Deck {
    * Creates all Cards and pushes them to an array.
    *
    * @param {Array} filenames Filenames of the images to put onto the Cards
+   * @param {string} backsideOfCard The image to be on the backside of the card
    */
-  makeTheDeck (filenames) {
+  makeTheDeck (filenames, backsideOfCard) {
     for (let i = 0; i < this.numberOfCards; i++) {
-      this.deckOfCards.push(new Card(filenames[i], '0'))
+      this.deckOfCards.push(new Card(filenames[i], backsideOfCard))
     }
   }
 
@@ -44,9 +45,10 @@ export class Deck {
    * Initialize the deck and shuffles it.
    *
    * @param {Array} filenames Filenames of images for the cards
+   * @param {string} backside The image to be on the backside of the card
    */
-  initDeck (filenames) {
-    this.makeTheDeck(filenames)
+  initDeck (filenames, backside) {
+    this.makeTheDeck(filenames, backside)
     this.deckOfCards = this.shuffle()
   }
 

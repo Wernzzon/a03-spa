@@ -1,7 +1,5 @@
 'use strict'
 
-// Imports
-
 /**
  * Creates desktop div and appends to body.
  */

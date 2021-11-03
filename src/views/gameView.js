@@ -3,7 +3,8 @@
 import { options, makeLayout } from '../apps/memory/layout'
 import { Deck } from '../apps/memory/deck'
 
-let choosenLayout = 16
+let choosenLayout = options[3]
+let numberOfCards = 8
 
 /**
  * Bind the cards to their cardholder.
@@ -33,6 +34,20 @@ function giveOptions () {
     btn.id = value
     btn.textContent = value
     btn.addEventListener('click', e => {
+      switch (btn.textContent) {
+        case options[1]:
+          numberOfCards = 16
+          choosenLayout = options[1]
+          break
+        case options[2]:
+          numberOfCards = 4
+          choosenLayout = options[2]
+          break
+        case options[3]:
+          numberOfCards = 8
+          choosenLayout = options[3]
+          break
+      }
       choosenLayout = btn.textContent
     })
     wrapper.appendChild(btn)
@@ -48,7 +63,7 @@ function giveOptions () {
  * @returns {number} Layout option to return
  */
 function getLayoutOption () {
-  return choosenLayout
+  return numberOfCards
 }
 
 export {

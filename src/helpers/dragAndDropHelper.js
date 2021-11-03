@@ -1,80 +1,69 @@
 'use strict'
-let item
-let dropArea
 
 /**
- * Drag start.
+ * Makes an element draggable.
  *
- * @param {undefined} e Event
+ * @param {HTMLDivElement} elmnt Element to be draggable
  */
-function dragStart (e) {
-  const style = window.getComputedStyle(e.target, null)
-  e.dataTransfer.setData('text/html text/javascript image/png',
-    (parseInt(style.getPropertyValue('left'), 10) - e.clientX) + ',' +
-    (parseInt(style.getPropertyValue('top'), 10) - e.clientY)
-  )
+function dragElement (elmnt) {
+  let pos1 = 0; let pos2 = 0; let pos3 = 0; let pos4 = 0
 
-  e.dataTransfer.effectAllowed = 'move'
-}
+  elmnt.onmousedown = dragMouseDown
 
-/**
- * Drag Enter.
- *
- * @param {undefined} e Event
- */
-function dragEnter (e) {
-  e.preventDefault()
-}
+  /**
+   * Sets event on dragMouseDown.
+   *
+   * @param {Event} e Event
+   */
+  function dragMouseDown (e) {
+    e = e || window.event
+    e.preventDefault()
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX
+    pos4 = e.clientY
+    document.onmouseup = closeDragElement
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag
+  }
 
-/**
- * Drag Over.
- *
- * @param {undefined} e Event
- *
- */
-function dragOver (e) {
-  e.preventDefault()
-  e.dataTransfer.dropEffect = 'move'
-}
+  /**
+   * Sets event onmousemove.
+   *
+   * @param {Event} e Event
+   */
+  function elementDrag (e) {
+    e = e || window.event
+    e.preventDefault()
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX
+    pos2 = pos4 - e.clientY
+    pos3 = e.clientX
+    pos4 = e.clientY
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + 'px'
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + 'px'
+  }
 
-/**
- * Drop.
- *
- * @param {undefined} e Event
- *
- */
-function drop (e) {
-  const offset = e.dataTransfer.getData('text/html text/javascript image/png').split(',')
-
-  item.style.left = (e.clientX + parseInt(offset[0], 10)) + 'px'
-  item.style.top = (e.clientY + parseInt(offset[1], 10)) + 'px'
-
-  e.preventDefault()
+  /**
+   * Sets event onmouseup.
+   */
+  function closeDragElement () {
+    /* stop moving when mouse button is released: */
+    document.onmouseup = null
+    document.onmousemove = null
+  }
 }
 
 /**
  * Sets all listeners for the specified id.
- */
-function setEventsForId () {
-  item.addEventListener('dragstart', dragStart)
-
-  dropArea.addEventListener('dragenter', dragEnter)
-  dropArea.addEventListener('dragover', dragOver)
-  dropArea.addEventListener('drop', drop)
-}
-
-/**
- * Sets params for other functions.
  *
- * @param {string} itemId Id of draggable element
- * @param {string} dropId Id of droppable area
+ * @param {string} itemId Id of element
  */
-function setParams (itemId, dropId) {
-  item = document.getElementById(itemId)
-  dropArea = document.getElementById('desktop')
+function makeElementDraggable (itemId) {
+  // dragElement(document.getElementById(`drag-${itemId}`))
+  dragElement(document.getElementById(itemId))
 }
 
 export {
-  setEventsForId,
-  setParams
+  makeElementDraggable
 }

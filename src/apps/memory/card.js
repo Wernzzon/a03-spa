@@ -11,62 +11,44 @@ export class Card {
    * @param {string} backside Filename of backside of the card
    */
   constructor (image, backside) {
+    this.card = document.createElement('div')
     this.img = image
     this.backsideImg = backside
-    this.matched = false
-    this.flipped = false
+    this.makeCard()
   }
 
   /**
-   * Sets the status if the card has been flipped or not.
+   * Returns the name of the image.
    *
-   * @param {boolean} value True or false
+   * @returns {string} Name of image
    */
-  flip (value) {
-    this.flipped = value
+  getImg () {
+    return this.img
   }
 
   /**
-   * Returns status of matched card.
+   * Returns this memory-card.
    *
-   * @returns {boolean} True or false
+   * @returns {HTMLDivElement} Complete memory-card
    */
-  isMatched () {
-    return this.matched
-  }
-
-  /**
-   * Sets the status if the card has matched or not.
-   *
-   * @param {boolean} value True or false
-   */
-  matched (value) {
-    this.matched = value
+  getCard () {
+    return this.card
   }
 
   /**
    * Sets the frontside image and backside image and appends them into a holder.
-   *
-   * @returns {HTMLDivElement} Memorycard holder for front and- backside
    */
-  getImg () {
+  makeCard () {
     const imgElement = document.createElement('img')
     imgElement.src = `/images/memoryCards/${this.img}.png`
     imgElement.classList.add('frontside')
-    imgElement.title = this.img
 
     const backImgElement = document.createElement('img')
     backImgElement.src = `/images/memoryCards/${this.backsideImg}.png`
     backImgElement.classList.add('backside')
-    backImgElement.title = this.backsideImg
 
-    const holder = document.createElement('div')
-    holder.classList.add('cardHolder')
-    holder.appendChild(imgElement)
-    holder.appendChild(backImgElement)
-    holder.addEventListener('click', e => {
-      holder.classList.add('flip')
-    })
-    return holder
+    this.card.classList.add('cardHolder')
+    this.card.appendChild(imgElement)
+    this.card.appendChild(backImgElement)
   }
 }

@@ -1,5 +1,8 @@
 'use strict'
 
+// Imports
+import { makeElementDraggable } from '../helpers/dragAndDropHelper'
+
 /**
  * Creates a window for applications.
  *
@@ -11,7 +14,6 @@ function createWindow (idOfWindow) {
   const window = document.createElement('div')
   window.id = idOfWindow
   window.classList.add('draggableWindow')
-  window.draggable = true
   window.appendChild(createCloseButton(window.id))
   return window
 }
@@ -32,6 +34,17 @@ function createCloseButton (idOfRoot) {
 }
 
 /**
+ * Adds event listener to close button.
+ *
+ * @param {string} windowId Id of window to close
+ */
+function addEventToCloseBtn (windowId) {
+  document.getElementById(`close-${windowId}`).addEventListener('click', e => {
+    document.getElementById(windowId).remove()
+  })
+}
+
+/**
  * Appends application to window.
  *
  * @param {string} windowId Id of window to append to
@@ -41,7 +54,18 @@ function appendApplication (windowId, app) {
   document.getElementById(windowId).appendChild(app)
 }
 
+/**
+ * Adds event listeners to the window.
+ *
+ * @param {string} windowId Id of window to append to
+ */
+function addEventListenersOnWindow (windowId) {
+  makeElementDraggable(windowId)
+  addEventToCloseBtn(windowId)
+}
+
 export {
   createWindow,
-  appendApplication
+  appendApplication,
+  addEventListenersOnWindow
 }

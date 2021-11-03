@@ -1,9 +1,8 @@
 
 // Imports
 import { createDesktop } from './views/desktopView'
-import { createWindow, appendApplication } from './views/windowView'
-import { startGame } from './apps/memory/gameLogic'
-import { setEventsForId, setParams } from './helpers/dragAndDropHelper'
+import { createWindow, appendApplication, addEventListenersOnWindow } from './views/windowView'
+import { startGame, setFlipEvents } from './apps/memory/game'
 
 window.addEventListener('load', main)
 const settingsCounter = ['settings', 0]
@@ -14,7 +13,7 @@ const diceCounter = ['dice', 0]
  * Creates desktop.
  */
 function main () {
-  document.title = 'PWA'
+  document.title = 'PWD'
   createDesktop()
   addEventListeners()
 }
@@ -24,27 +23,34 @@ function main () {
  */
 function addEventListeners () {
   document.querySelectorAll('.menuIcon').forEach(item => {
-    item.addEventListener('click', event => {
+    item.addEventListener('click', e => {
       const instanceNumber = addInstance(item.id)
       document.getElementById('desktop').appendChild(createWindow(`${item.id}${instanceNumber}`))
-      appendApplication(`${item.id}${instanceNumber}`, startGame())
-      setParams(`${item.id}${instanceNumber}`)
-      setEventsForId()
-      addEventToCloseBtn(`${item.id}${instanceNumber}`, item.id)
+      addEventListenersOnWindow(`${item.id}${instanceNumber}`)
+      addApp(item.id, instanceNumber)
     })
   })
 }
 
 /**
- * Adds event listener to close button.
+ * Returns an application depending on what icon is clicked.
  *
- * @param {string} windowId Id of window to close
  * @param {string} appName Name of application
+ * @param {number} num Number of instance
  */
-function addEventToCloseBtn (windowId, appName) {
-  document.getElementById(`close-${windowId}`).addEventListener('click', e => {
-    document.getElementById(windowId).remove()
-  })
+function addApp (appName, num) {
+  if (appName === settingsCounter[0]) {
+    return
+  }
+
+  if (appName === messageCounter[0]) {
+    return
+  }
+
+  if (appName === diceCounter[0]) {
+    appendApplication(`${appName}${num}`, startGame())
+    setFlipEvents()
+  }
 }
 
 /**

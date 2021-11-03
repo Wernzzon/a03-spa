@@ -47,14 +47,27 @@ body {
   object-fit: contain;
 }
 
-#desktop .draggableWindow {
-  position: relative;
+.draggableWindow {
+  position: absolute;
   border: 0.1rem solid black;
   width: 60rem;
   height: 40rem;
+  z-index: 9;
 }
 
-#board {
+.dragger {
+  border: 0.1rem solid black;
+  background-color: aqua;
+  width: fit-content;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.close {
+  flex-direction: column;
+}
+
+.board {
   position: relative;
   left: 7.5rem;
   width: 45rem;
@@ -65,16 +78,34 @@ body {
 }
 
 .cardHolder {
-  width: calc(25% - 10px);
-  height: calc(25% - 10px);
   margin: 0.5rem;
   position: relative;
   transform-style: preserve-3d;
   transition: all 0.8s ease;
 }
 
+.fourbyfour {
+  width: calc(25% - 10px);
+  height: calc(25% - 10px);
+}
+
+.twobytwo {
+  width: calc(50% - 10px);
+  height: calc(50% - 10px);
+}
+
+.twobyfour {
+  width: calc(25% - 10px);
+  height: calc(50% - 10px);
+}
+
 .cardHolder.flip {
   transform: rotateY(180deg);
+  box-shadow: 0 0 2rem yellow;
+}
+
+.cardHolder.match {
+  box-shadow: 0 0 2rem limegreen;
 }
 
 .frontside {
