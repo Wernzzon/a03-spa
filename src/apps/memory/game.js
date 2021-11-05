@@ -1,10 +1,10 @@
-/* eslint-disable no-unused-vars */
 'use strict'
 
 // Imports
 import { Deck } from './deck'
+import { switchView } from '../../views/windowView'
+import { getLayoutOption, giveOptions, combineCounterAndLayout } from '../../views/gameView'
 import { Card } from './card'
-import { getLayoutOption, bindCardsToCardHolder } from '../../views/gameView'
 
 const filenames = [
   '1', '1', '2', '2',
@@ -14,90 +14,165 @@ const filenames = [
 ]
 
 const facedown = '0'
-const matchedCards = []
-let deck
-let firstCard
-let secondCard
+const flippedCards = {
+  first: Card,
+  second: Card
+}
 let hasFlippedCard = false
+let lockboard = false
+let attempts = 0
+
+/**
+ * Gives first view of game.
+ *
+ * @returns {HTMLDivElement} First view of game
+ */
+function showMemory () {
+  return giveOptions()
+}
 
 /**
  * Starts the game.
  *
+ * @param {Deck} deck An empty deck
+ *
  * @returns {HTMLDivElement} Returns full app
  */
-function startGame () {
-  deck = new Deck(getLayoutOption())
-  deck.initDeck(filenames, facedown)
-  return bindCardsToCardHolder(deck)
+function startGame (deck) {
+  deck.makeTheDeck(getLayoutOption(), filenames, facedown)
+  return combineCounterAndLayout(deck.getDeck())
 }
 
 /**
  * Sets class 'flip' on card if flipped cards are less than 2,
  * then checks if they match.
  *
+ * @param {Deck} deck Deck of cards
+ * @param {Card} card Card clicked
+ *
  * @returns {undefined} Nothing
  */
-function flipCard () {
-  if (this === firstCard) return
+function flipCard (deck, card) {
+  if (lockboard) return
+  if (card === flippedCards[0]) return
 
-  this.classList.add('flip')
+  deck.getCard(card).getCardElement().classList.add('flip', 'wait')
 
   if (!hasFlippedCard) {
     hasFlippedCard = true
-    firstCard = this
+    flippedCards.first = deck.getCard(card)
+
     return
   }
 
-  secondCard = this
-  hasFlippedCard = false
-  checkMatch()
+  flippedCards.second = deck.getCard(card)
+
+  checkMatch(deck, card)
 }
 
 /**
  * Checks for match.
+ *
+ * @param {Deck} deck Deck of cards
  */
-function checkMatch () {
-  if (firstCard.getImg() === secondCard.getImg()) {
-    console.log(firstCard, secondCard)
-    matchedCards.push([deck.getDeck().indexOf(firstCard), deck.getDeck().indexOf(secondCard)])
-    setCardsToMatched()
-  } else {
-    unFlipCards()
-    firstCard = null
-    secondCard = null
-  }
+function checkMatch (deck) {
+  attemptsPlus()
+
+  deck.getCard(flippedCards.first).getImg() === deck.getCard(flippedCards.second).getImg()
+    ? setCardsToMatched(deck)
+    : unFlipCards(deck)
 }
 
 /**
  * Disables cards because they are matched.
+ *
+ * @param {Deck} deck Deck of cards
  */
-function setCardsToMatched () {
-  deck.getDeck()[deck.getDeck().indexOf(firstCard)].getCard().removeEventListener('click', flipCard)
-  deck.getDeck()[deck.getDeck().indexOf(firstCard)].getCard().classList.add('match')
-  deck.getDeck()[deck.getDeck().indexOf(secondCard)].getCard().removeEventListener('click', flipCard)
-  deck.getDeck()[deck.getDeck().indexOf(secondCard)].getCard().classList.add('match')
+function setCardsToMatched (deck) {
+  deck.getCard(flippedCards.first).getCardElement().removeEventListener('click', flipCard)
+  deck.getCard(flippedCards.first).getCardElement().classList.replace('wait', 'match')
+
+  deck.getCard(flippedCards.second).getCardElement().removeEventListener('click', flipCard)
+  deck.getCard(flippedCards.second).getCardElement().classList.replace('wait', 'match')
+
+  resetBoard()
 }
 
 /**
  * Removes class 'flip' on cards.
+ *
+ * @param {Deck} deck Deck of cards
  */
-function unFlipCards () {
+function unFlipCards (deck) {
+  lockboard = true
+  blinkNoMatch(deck)
+
   setTimeout(() => {
-    deck.getDeck()[deck.getDeck().indexOf(firstCard)].getCard().classList.remove('flip')
-    deck.getDeck()[deck.getDeck().indexOf(secondCard)].getCard().classList.remove('flip')
+    deck.getCard(flippedCards.first).getCardElement().classList.remove('flip')
+    deck.getCard(flippedCards.second).getCardElement().classList.remove('flip')
+    resetBoard()
   }, 1000)
 }
 
 /**
- * Sets event listeners for all cards.
+ * Blink box shadow red.
+ *
+ * @param {Deck} deck Deck of cards
  */
-function setFlipEvents () {
+function blinkNoMatch (deck) {
+  setTimeout(() => {
+    deck.getCard(flippedCards.first).getCardElement().classList.replace('wait', 'noMatch')
+    deck.getCard(flippedCards.second).getCardElement().classList.replace('wait', 'noMatch')
+    setTimeout(() => {
+      deck.getCard(flippedCards.first).getCardElement().classList.remove('noMatch')
+      deck.getCard(flippedCards.second).getCardElement().classList.remove('noMatch')
+    }, 300)
+  }, 300)
+}
+
+/**
+ * Resets status of the board.
+ */
+function resetBoard () {
+  hasFlippedCard = lockboard = false
+  flippedCards.first = null
+  flippedCards.second = null
+}
+
+/**
+ * Sets event listeners for all cards.
+ *
+ * @param {Deck} deck Deck of cards
+ */
+function setFlipEvents (deck) {
   deck.getDeck().forEach(card => {
-    card.getCard().addEventListener('click', flipCard)
+    card.getCardElement().addEventListener('click', e => {
+      flipCard(deck, card)
+    })
   })
 }
 
+/**
+ * Add eventListener to button in order to switch view.
+ *
+ * @param {string} windowId Id of window
+ */
+function setSwitchEvent (windowId) {
+  document.getElementById('confirmLayout').addEventListener('click', e => {
+    const deck = new Deck()
+    switchView(windowId, startGame(deck), document.getElementById('overlay'))
+    setFlipEvents(deck)
+  })
+}
+
+/**
+ * Increase the attemps by one, after flipping two cards.
+ */
+function attemptsPlus () {
+  document.getElementById('attempts').textContent = `${++attempts}`
+}
+
 export {
-  startGame,
-  setFlipEvents
+  showMemory,
+  setSwitchEvent
 }

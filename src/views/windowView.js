@@ -55,6 +55,17 @@ function appendApplication (windowId, app) {
 }
 
 /**
+ * Replaces old child with new, in order to switch view in an app.
+ *
+ * @param {string} windowId Id of window which the switch should happen in
+ * @param {HTMLDivElement} newApp New node to replace with
+ * @param {HTMLDivElement} oldApp Id of old node to be replaced
+ */
+function switchView (windowId, newApp, oldApp) {
+  document.getElementById(windowId).replaceChild(newApp, oldApp)
+}
+
+/**
  * Adds event listeners to the window.
  *
  * @param {string} windowId Id of window to append to
@@ -65,6 +76,7 @@ function addEventListenersOnWindow (windowId) {
 }
 
 export {
+  switchView,
   createWindow,
   appendApplication,
   addEventListenersOnWindow

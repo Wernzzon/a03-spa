@@ -67,6 +67,24 @@ body {
   flex-direction: column;
 }
 
+#overlay {
+  position: relative;
+  left: 7.5rem;
+  width: 45rem;
+  height: 35rem;
+}
+
+#countCont {
+  position: absolute;
+  left: 20rem;
+
+}
+
+.counter {
+  font-size: 2rem;
+  text-align: center;
+}
+
 .board {
   position: relative;
   left: 7.5rem;
@@ -101,11 +119,18 @@ body {
 
 .cardHolder.flip {
   transform: rotateY(180deg);
-  box-shadow: 0 0 2rem yellow;
+}
+
+.cardHolder.wait {
+  box-shadow: 0 0 2.5rem yellow;
 }
 
 .cardHolder.match {
-  box-shadow: 0 0 2rem limegreen;
+  box-shadow: 0 0 2.5rem limegreen;
+}
+
+.cardHolder.noMatch {
+  box-shadow: 0 0 2.5rem crimson;
 }
 
 .frontside {

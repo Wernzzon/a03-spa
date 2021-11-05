@@ -1,60 +1,100 @@
 'use strict'
 
 import { options, makeLayout } from '../apps/memory/layout'
-import { Deck } from '../apps/memory/deck'
+import { Card } from '../apps/memory/card'
 
-let choosenLayout = options[3]
-let numberOfCards = 8
+let choosenLayout
+
+/**
+ * Combines counter and layout.
+ *
+ * @param {Card[]} cards Deck of cards
+ *
+ * @returns {HTMLDivElement} Counter and layout wrapped together
+ */
+function combineCounterAndLayout (cards) {
+  const wrapper = document.createElement('div')
+  wrapper.appendChild(counter())
+  wrapper.appendChild(bindCardsToCardHolder(cards))
+
+  return wrapper
+}
 
 /**
  * Bind the cards to their cardholder.
  *
- * @param {Deck} deck Deck of cards
+ * @param {Card[]} cards Deck of cards
  * @returns {HTMLDivElement} Grid with cards
  */
-function bindCardsToCardHolder (deck) {
-  const grid = makeLayout(choosenLayout, deck.getDeck())
-
-  return grid
+function bindCardsToCardHolder (cards) {
+  return makeLayout(choosenLayout, cards)
 }
 
 /**
- * Gives all three layout options, and prints them.
+ * Creates a counter.
+ *
+ * @returns {HTMLDivElement} Container for counter
+ */
+function counter () {
+  const countContainer = document.createElement('div')
+  countContainer.classList.add('countCont')
+
+  const atmps = document.createElement('span')
+  atmps.classList.add('counter')
+  atmps.textContent = 'Attempts: '
+
+  const atmpsCounter = document.createElement('span')
+  atmpsCounter.id = 'attempts'
+  atmpsCounter.classList.add('counter')
+  atmpsCounter.textContent = '0'
+
+  countContainer.appendChild(atmps)
+  countContainer.appendChild(atmpsCounter)
+
+  return countContainer
+}
+
+/**
+ * Gives all three layout options.
  *
  * @returns {HTMLDivElement} Container with options for layout
  */
-// eslint-disable-next-line no-unused-vars
 function giveOptions () {
   const container = document.createElement('div')
+  container.id = 'overlay'
+
   const inst = document.createElement('p')
-  inst.textContent = 'Choose which layout you want'
+  inst.textContent = 'Choose which layout you want for the memorycards'
+
   const wrapper = document.createElement('div')
-  for (const value in options) {
+  for (const value of options) {
     const btn = document.createElement('button')
-    btn.id = value
+    btn.id = options.indexOf(value)
     btn.textContent = value
+    console.log(value)
     btn.addEventListener('click', e => {
-      switch (btn.textContent) {
-        case options[1]:
-          numberOfCards = 16
-          choosenLayout = options[1]
-          break
-        case options[2]:
-          numberOfCards = 4
-          choosenLayout = options[2]
-          break
-        case options[3]:
-          numberOfCards = 8
-          choosenLayout = options[3]
-          break
-      }
       choosenLayout = btn.textContent
     })
     wrapper.appendChild(btn)
   }
+
   container.appendChild(inst)
   container.appendChild(wrapper)
+  container.appendChild(confirmButton())
+
   return container
+}
+
+/**
+ * Creates a confirm button.
+ *
+ * @returns {HTMLButtonElement} Button
+ */
+function confirmButton () {
+  const btn = document.createElement('button')
+  btn.id = 'confirmLayout'
+  btn.textContent = 'Confirm'
+  return btn
 }
 
 /**
@@ -63,11 +103,14 @@ function giveOptions () {
  * @returns {number} Layout option to return
  */
 function getLayoutOption () {
-  return numberOfCards
+  if (choosenLayout === options[1]) return 4
+  if (choosenLayout === options[2]) return 8
+
+  return 16
 }
 
 export {
-  bindCardsToCardHolder,
   giveOptions,
-  getLayoutOption
+  getLayoutOption,
+  combineCounterAndLayout
 }

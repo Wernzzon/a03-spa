@@ -2,7 +2,7 @@
 // Imports
 import { createDesktop } from './views/desktopView'
 import { createWindow, appendApplication, addEventListenersOnWindow } from './views/windowView'
-import { startGame, setFlipEvents } from './apps/memory/game'
+import { setSwitchEvent, showMemory } from './apps/memory/game'
 
 window.addEventListener('load', main)
 const settingsCounter = ['settings', 0]
@@ -48,8 +48,8 @@ function addApp (appName, num) {
   }
 
   if (appName === diceCounter[0]) {
-    appendApplication(`${appName}${num}`, startGame())
-    setFlipEvents()
+    appendApplication(`${appName}${num}`, showMemory(`${appName}${num}`))
+    setSwitchEvent(`${appName}${num}`)
   }
 }
 
