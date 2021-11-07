@@ -14,6 +14,7 @@ let choosenLayout
  */
 function combineCounterAndLayout (cards) {
   const wrapper = document.createElement('div')
+  wrapper.id = 'memory'
   wrapper.appendChild(counter())
   wrapper.appendChild(bindCardsToCardHolder(cards))
 
@@ -71,7 +72,6 @@ function giveOptions () {
     const btn = document.createElement('button')
     btn.id = options.indexOf(value)
     btn.textContent = value
-    console.log(value)
     btn.addEventListener('click', e => {
       choosenLayout = btn.textContent
     })
@@ -83,6 +83,28 @@ function giveOptions () {
   container.appendChild(confirmButton())
 
   return container
+}
+
+/**
+ * Congratulations overlay.
+ *
+ * @param {number} attempts Number of moves made by user
+ * @returns {HTMLDivElement} Div
+ */
+function congrats (attempts) {
+  const tmp = document.createElement('div')
+  tmp.classList.add('congratz')
+
+  const title = document.createElement('h2')
+  title.textContent = 'Congratulations you won'
+
+  const movesMade = document.createElement('p')
+  movesMade.textContent = `You made ${attempts} moves!`
+
+  tmp.appendChild(title)
+  tmp.appendChild(movesMade)
+
+  return tmp
 }
 
 /**
@@ -110,6 +132,7 @@ function getLayoutOption () {
 }
 
 export {
+  congrats,
   giveOptions,
   getLayoutOption,
   combineCounterAndLayout

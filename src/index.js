@@ -6,15 +6,15 @@ import { setSwitchEvent, showMemory } from './apps/memory/game'
 
 window.addEventListener('load', main)
 const settingsCounter = ['settings', 0]
-const messageCounter = ['message', 0]
-const diceCounter = ['dice', 0]
+const chatCounter = ['chat', 0]
+const memoryCounter = ['memory', 0]
 
 /**
  * Creates desktop.
  */
 function main () {
   document.title = 'PWD'
-  createDesktop()
+  createDesktop([settingsCounter[0], chatCounter[0], memoryCounter[0]])
   addEventListeners()
 }
 
@@ -43,11 +43,11 @@ function addApp (appName, num) {
     return
   }
 
-  if (appName === messageCounter[0]) {
+  if (appName === chatCounter[0]) {
     return
   }
 
-  if (appName === diceCounter[0]) {
+  if (appName === memoryCounter[0]) {
     appendApplication(`${appName}${num}`, showMemory(`${appName}${num}`))
     setSwitchEvent(`${appName}${num}`)
   }
@@ -65,11 +65,11 @@ function addInstance (param) {
     return ++settingsCounter[1]
   }
 
-  if (param === messageCounter[0]) {
-    return ++messageCounter[1]
+  if (param === chatCounter[0]) {
+    return ++chatCounter[1]
   }
 
-  if (param === diceCounter[0]) {
-    return ++diceCounter[1]
+  if (param === memoryCounter[0]) {
+    return ++memoryCounter[1]
   }
 }

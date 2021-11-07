@@ -3,7 +3,7 @@
 // Imports
 import { Deck } from './deck'
 import { switchView } from '../../views/windowView'
-import { getLayoutOption, giveOptions, combineCounterAndLayout } from '../../views/gameView'
+import { getLayoutOption, giveOptions, combineCounterAndLayout, congrats } from '../../views/gameView'
 import { Card } from './card'
 
 const filenames = [
@@ -14,12 +14,14 @@ const filenames = [
 ]
 
 const facedown = '0'
+const matchedCards = []
 const flippedCards = {
   first: Card,
   second: Card
 }
 let hasFlippedCard = false
 let lockboard = false
+let thisWindowId
 let attempts = 0
 
 /**
@@ -95,7 +97,8 @@ function setCardsToMatched (deck) {
   deck.getCard(flippedCards.second).getCardElement().removeEventListener('click', flipCard)
   deck.getCard(flippedCards.second).getCardElement().classList.replace('wait', 'match')
 
-  resetBoard()
+  matchedCards.push(deck.getCard(flippedCards.first), deck.getCard(flippedCards.second))
+  if (!gameOver(deck)) resetBoard()
 }
 
 /**
@@ -131,6 +134,22 @@ function blinkNoMatch (deck) {
 }
 
 /**
+ * Check if game over.
+ *
+ * @param {Deck} deck Deck of cards
+ *
+ * @returns {boolean} True or false
+ */
+function gameOver (deck) {
+  if (matchedCards.length === deck.getDeck().length) {
+    switchView(thisWindowId, congrats(attempts), document.getElementById('memory'))
+
+    return true
+  }
+  return false
+}
+
+/**
  * Resets status of the board.
  */
 function resetBoard () {
@@ -158,9 +177,10 @@ function setFlipEvents (deck) {
  * @param {string} windowId Id of window
  */
 function setSwitchEvent (windowId) {
+  thisWindowId = windowId
   document.getElementById('confirmLayout').addEventListener('click', e => {
     const deck = new Deck()
-    switchView(windowId, startGame(deck), document.getElementById('overlay'))
+    switchView(thisWindowId, startGame(deck), document.getElementById('overlay'))
     setFlipEvents(deck)
   })
 }

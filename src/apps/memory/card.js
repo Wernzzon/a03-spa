@@ -48,7 +48,6 @@ export class Card {
     backImgElement.classList.add('backside')
 
     this.card.classList.add('cardHolder')
-    // this.card.dataset.image = this.img
     this.card.appendChild(imgElement)
     this.card.appendChild(backImgElement)
   }

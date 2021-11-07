@@ -2,27 +2,30 @@
 
 /**
  * Creates desktop div and appends to body.
+ *
+ * @param {string[]} iconNames Filenames of icon-images
  */
-function createDesktop () {
+function createDesktop (iconNames) {
   document.body.style.width = window.innerWidth
   document.body.style.height = window.innerHeight
   const dsktp = document.createElement('div')
   dsktp.id = 'desktop'
-  dsktp.appendChild(createIconMenu())
+  dsktp.appendChild(createIconMenu(iconNames))
   document.body.appendChild(dsktp)
 }
 
 /**
  * Creates wrapper for application icons.
  *
+ * @param {string[]} filenames Filenames of icon-images
+ *
  * @returns {HTMLDivElement} Wrapper for icon elements
  */
-function createIconMenu () {
+function createIconMenu (filenames) {
   const iconWrapper = document.createElement('div')
   iconWrapper.id = 'iconContainer'
-  const imgFilenames = ['settings', 'dice', 'message']
   for (let i = 0; i < 3; i++) {
-    iconWrapper.appendChild(createIcon(imgFilenames[i]))
+    iconWrapper.appendChild(createIcon(filenames[i]))
   }
   return iconWrapper
 }
