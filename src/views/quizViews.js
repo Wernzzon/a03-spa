@@ -1,18 +1,19 @@
 'use strict'
 
 // Imports
-import { createMenuElements, createQuizElements, createAnswerCorrect, createQuizOver, createQuizComplete, getCheckedButton } from './createViews'
-import { gatherInfo, isFirstCallMade, answerIsAlternatives, resetAltExists, getURL, setNextURL } from './updateContent'
-import { sendAnswerToServer } from './sendContent'
-import { saveHighscore } from './storage'
-import { getTimeTaken } from './timer'
+import { createMenuElements, createQuizElements, createAnswerCorrect, createQuizOver, createQuizComplete, getCheckedButton } from './createQuizViews'
+import { gatherInfo, isFirstCallMade, answerIsAlternatives, resetAltExists, getURL, setNextURL } from '../apps/quiz/updateContent'
+import { sendAnswerToServer } from '../apps/quiz/sendContent'
+import { saveHighscore } from '../apps/quiz/storage'
+import { getTimeTaken } from '../apps/quiz/timer'
 
 /**
  * Sets title of HTML doc, calls to create HTML elements.
+ *
+ * @returns {HTMLDivElement} Menu
  */
 function getMenu () {
-  setTitle('Quiz - Menu')
-  createMenuElements()
+  return createMenuElements()
 }
 
 /**
@@ -23,7 +24,6 @@ function getMenu () {
  * @returns {boolean} Returns true
  */
 async function getQuiz (firstCall) {
-  setTitle('Quiz - Questions')
   try {
     const data = await gatherInfo(firstCall)
     createQuizElements(data)
@@ -71,7 +71,6 @@ async function checkAnswer (nickname) {
  * @returns {boolean} False
  */
 function getCongratz (message) {
-  setTitle('Quiz - Congratz')
   return createAnswerCorrect(message)
 }
 
@@ -83,7 +82,6 @@ function getCongratz (message) {
  * @returns {boolean} True
  */
 function getQuizOver (message) {
-  setTitle('Quiz - Game Over')
   return createQuizOver(message)
 }
 
@@ -95,17 +93,7 @@ function getQuizOver (message) {
  * @returns {boolean} True
  */
 function getQuizComplete (message) {
-  setTitle('Quiz - Complete')
   return createQuizComplete(message)
-}
-
-/**
- * Sets title of HTML doc.
- *
- * @param {string} title String to be set as title
- */
-function setTitle (title) {
-  document.title = title
 }
 
 /**

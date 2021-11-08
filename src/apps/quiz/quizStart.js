@@ -1,11 +1,9 @@
 'use strict'
 
 // Imports
-import { getMenu, getQuiz, checkAnswer } from './views'
-import { alert } from './createViews'
+import { getMenu, getQuiz, checkAnswer } from '../../views/quizViews'
+import { alert } from '../../views/createQuizViews'
 import { nicknameExists } from './storage'
-
-window.addEventListener('load', loadMenu)
 
 let firstCall = true
 let checker
@@ -15,17 +13,32 @@ let nickname
  * Load in functions to render the menu for the quiz.
  *
  * @param {Array} params If alert should be called or not
+ *
+ * @returns {HTMLDivElement} Menu
  */
 function loadMenu (params) {
   try {
-    getMenu()
     if (!params[0]) {
-      alert(params[1])
+      return [getMenu(), alert(params[1])]
     }
-    document.getElementById('newGame').addEventListener('click', checkpoint)
+    return getMenu()
   } catch (error) {
     console.log(error)
   }
+}
+
+/**
+ * Sets listener on newGame button.
+ */
+function setNewGameListener () {
+  document.getElementById('newGame').addEventListener('click', checkpoint)
+}
+
+/**
+ * Sets listener on sendAnswer button.
+ */
+function setSendAnswerListener () {
+  document.getElementById('sendAnswer').addEventListener('click', loadAnswer)
 }
 
 /**
@@ -33,6 +46,7 @@ function loadMenu (params) {
  * gives error message if nickname exists.
  */
 function checkpoint () {
+  console.log('check')
   const res = saveNickname()
   if (!res[0]) {
     loadMenu(res)
@@ -95,4 +109,12 @@ async function loadAnswer () {
   } catch (error) {
     console.log(error)
   }
+}
+
+export {
+  loadMenu,
+  loadQuiz,
+  loadAnswer,
+  setNewGameListener,
+  setSendAnswerListener
 }

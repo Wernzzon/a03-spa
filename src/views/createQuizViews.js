@@ -1,18 +1,20 @@
 'use strict'
 
 // Imports
-import { timerElements, startCount } from './timer'
-import { getTopFiveTimes } from './storage'
+import { timerElements, startCount } from '../apps/quiz/timer'
+import { getTopFiveTimes } from '../apps/quiz/storage'
 
 let counter = 1
 let checkedButton
 
 /**
  * Creates HTML elements for the menu, and appends them to be visible.
+ *
+ * @returns {HTMLDivElement} Menu
  */
 function createMenuElements () {
-  const container = document.getElementById('container')
-  container.innerHTML = ''
+  const container = document.createElement('div')
+  container.id = 'quizContainer'
 
   const h1 = document.createElement('h1')
   h1.textContent = 'Welcome to the LNU quiz'
@@ -21,8 +23,9 @@ function createMenuElements () {
   intro.textContent = 'Pick a nickname and start the quiz'
 
   const nickname = document.createElement('input')
-  nickname.type = 'text'
   nickname.id = 'nickname'
+  nickname.required = true
+  nickname.size = 30
 
   const gameBtn = document.createElement('button')
   gameBtn.textContent = 'New Game'
@@ -42,16 +45,19 @@ function createMenuElements () {
   container.append(nickname)
   container.append(gameBtn)
   container.append(scoreBtn)
+
+  return container
 }
 
 /**
  * Creates HTML elements for the quiz question, and appends them to be visible.
  *
  * @param {object} params Data from server to be showed for user.
+ *
+ * @returns {HTMLDivElement} Container
  */
 function createQuizElements (params) {
-  const container = document.getElementById('container')
-  container.innerHTML = ''
+  const container = document.createElement('div')
 
   const numOfQuestion = document.createElement('p')
   numOfQuestion.id = 'numOfQuestion'
@@ -106,6 +112,8 @@ function createQuizElements (params) {
   container.append(timer)
   container.append(answerContainer)
   setupTimer(10, timer.id)
+
+  return container
 }
 
 /**
@@ -246,12 +254,14 @@ function createHighscore () {
  * Create an alert with a message.
  *
  * @param {string} msg String to show
+ *
+ * @returns {HTMLParagraphElement} Alert message
  */
 function alert (msg) {
   const alertMsg = document.createElement('p')
   alertMsg.textContent = msg
 
-  document.getElementById('container').append(alertMsg)
+  return alertMsg
 }
 
 /**
