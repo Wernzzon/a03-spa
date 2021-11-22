@@ -5,7 +5,7 @@ import { createMenuElements, createQuizElements, createGeneric, getCheckedButton
 import { gatherInfo, isFirstCallMade, answerIsAlternatives, resetAltExists, getURL, setNextURL } from '../apps/quiz/updateContent'
 import { sendAnswerToServer } from '../apps/quiz/sendContent'
 import { saveHighscore } from '../apps/quiz/storage'
-import { getTimeTaken } from '../apps/quiz/timer'
+import { getTimeTaken, startCount } from '../apps/quiz/timer'
 import { switchView } from './windowView'
 
 let idOfWindow
@@ -13,27 +13,26 @@ let idOfWindow
 /**
  * Sets title of HTML doc, calls to create HTML elements.
  *
- * @param {string} id Id of the current window
- * @param {Array} alert If first is true, append alert
+ * @param {Array} params If first is false, append alert
  * @returns {HTMLDivElement} Menu
  */
-function getMenu (id, alert) {
-  if (idOfWindow === null) idOfWindow = id
-
-  return createMenuElements(alert)
+function getMenu (params) {
+  return createMenuElements(params)
 }
 
 /**
- * Sets title of HTML doc, gets info for quiz question, calls to create HTML elements.
+ * Gets info for quiz question, calls to create HTML elements.
  *
+ * @param {string} id Id of current window
  * @param {boolean} firstCall True if it is the first time it is pass through else false
  *
  * @returns {boolean} Returns true
  */
-async function getQuiz (firstCall) {
+async function getQuiz (id, firstCall) {
   try {
     const data = await gatherInfo(firstCall)
-    switchView(idOfWindow, createQuizElements(data), document.getElementById('quizContainer'))
+    switchView(id, createQuizElements(data), document.getElementById(id).firstChild.nextSibling)
+    startCount()
     return isFirstCallMade()
   } catch (error) {
     console.log(error)

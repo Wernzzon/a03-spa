@@ -8,23 +8,26 @@ import { switchView } from '../../views/windowView'
 let firstCall = true
 let checker
 let nickname
-let idOfWindow
+const window = {
+  id: '',
+  args: ''
+}
 
 /**
  * Load in functions to render the menu for the quiz.
  *
  * @param {string} id Id of current window
- * @param {Array} params If alert should be called or not
  *
  * @returns {HTMLDivElement} Menu
  */
-function loadMenu (id, params) {
-  if (idOfWindow === null) {
-    idOfWindow = id
-    return getMenu()
+function loadMenu (id) {
+  if (window.id === '') {
+    window.id = id
+    window.args = [true]
+    return getMenu(window.args)
   }
 
-  switchView(idOfWindow, getMenu(params), document.getElementById(idOfWindow).childNodes()[1])
+  switchView(window.id, getMenu(window.args), document.getElementById(window.id).firstChild.nextSibling)
 }
 
 /**
@@ -49,7 +52,9 @@ function checkpoint () {
   console.log('check')
   const res = saveNickname()
   if (!res[0]) {
-    loadMenu(res)
+    window.args = res
+    console.log(window.id, window.args)
+    loadMenu()
     return
   }
 
@@ -89,7 +94,8 @@ function saveNickname () {
  */
 async function loadQuiz () {
   try {
-    checker = await getQuiz(firstCall)
+    checker = await getQuiz(window.id, firstCall)
+    console.log(checker)
     if (checker === true) {
       firstCall = false
     }

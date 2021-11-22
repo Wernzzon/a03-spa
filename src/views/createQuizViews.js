@@ -1,7 +1,7 @@
 'use strict'
 
 // Imports
-import { timerElements, startCount } from '../apps/quiz/timer'
+import { timerElements } from '../apps/quiz/timer'
 import { getTopFiveTimes } from '../apps/quiz/storage'
 
 let counter = 1
@@ -10,10 +10,10 @@ let checkedButton
 /**
  * Creates HTML elements for the menu, and appends them to be visible.
  *
- * @param {Array} alert If true an alert get appended
+ * @param {Array} params If first is false an alert gets appended
  * @returns {HTMLDivElement} Menu
  */
-function createMenuElements (alert) {
+function createMenuElements (params) {
   const container = document.createElement('div')
   container.id = 'quizMenu'
 
@@ -26,7 +26,6 @@ function createMenuElements (alert) {
   const nickname = document.createElement('input')
   nickname.id = 'nickname'
   nickname.required = true
-  nickname.size = 30
 
   const gameBtn = document.createElement('button')
   gameBtn.textContent = 'New Game'
@@ -46,7 +45,7 @@ function createMenuElements (alert) {
   container.append(nickname)
   container.append(gameBtn)
   container.append(scoreBtn)
-  if (!alert[0]) container.appendChild(alert(alert[1]))
+  if (!params[0]) container.append(alert(params[1]))
 
   return container
 }
@@ -107,8 +106,7 @@ function createQuizElements (params) {
     answerContainer.append(textAnswer)
   }
 
-  const button = createSubmitButton()
-  answerContainer.append(button)
+  answerContainer.append(createSubmitButton())
 
   container.append(numOfQuestion)
   container.append(question)
@@ -256,7 +254,6 @@ function getCheckedButton () {
  */
 function setupTimer (durationOfQuestion, idOfElement) {
   timerElements(durationOfQuestion, idOfElement)
-  startCount()
 }
 
 export {

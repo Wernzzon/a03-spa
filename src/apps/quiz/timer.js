@@ -10,11 +10,8 @@ let timerIsOn = false
  * accordance to what the timer stands on.
  */
 function timedCount () {
-  if (setDuration - durationCount === 0) {
-    stopCount()
-    document.getElementById('sendAnswer').click()
-    return
-  }
+  if (timerDone()) return
+
   document.getElementById(elementId).textContent = setDuration - durationCount++
   t = setTimeout(timedCount, 1000)
 }
@@ -54,6 +51,19 @@ function stopCount () {
     return 0
   }
   return durationCount
+}
+
+/**
+ * Checks if timer is down to 0.
+ *
+ * @returns {boolean} Return true
+ */
+function timerDone () {
+  if (setDuration - durationCount === 0) {
+    stopCount()
+    document.getElementById('sendAnswer').click()
+    return true
+  }
 }
 
 /**
