@@ -1,19 +1,26 @@
 'use strict'
 
 // Imports
-import { createMenuElements, createQuizElements, createAnswerCorrect, createQuizOver, createQuizComplete, getCheckedButton } from './createQuizViews'
+import { createMenuElements, createQuizElements, createGeneric, getCheckedButton } from './createQuizViews'
 import { gatherInfo, isFirstCallMade, answerIsAlternatives, resetAltExists, getURL, setNextURL } from '../apps/quiz/updateContent'
 import { sendAnswerToServer } from '../apps/quiz/sendContent'
 import { saveHighscore } from '../apps/quiz/storage'
 import { getTimeTaken } from '../apps/quiz/timer'
+import { switchView } from './windowView'
+
+let idOfWindow
 
 /**
  * Sets title of HTML doc, calls to create HTML elements.
  *
+ * @param {string} id Id of the current window
+ * @param {Array} alert If first is true, append alert
  * @returns {HTMLDivElement} Menu
  */
-function getMenu () {
-  return createMenuElements()
+function getMenu (id, alert) {
+  if (idOfWindow === null) idOfWindow = id
+
+  return createMenuElements(alert)
 }
 
 /**
@@ -26,7 +33,7 @@ function getMenu () {
 async function getQuiz (firstCall) {
   try {
     const data = await gatherInfo(firstCall)
-    createQuizElements(data)
+    switchView(idOfWindow, createQuizElements(data), document.getElementById('quizContainer'))
     return isFirstCallMade()
   } catch (error) {
     console.log(error)
@@ -46,54 +53,29 @@ async function checkAnswer (nickname) {
     const success = await sendAnswerToServer(getURL(), answer)
 
     if (success[0] === 'GameOver') {
-      return getQuizOver(success[1])
+      switchView(idOfWindow,
+        createGeneric('GAME OVER', success[1], 'Reload page for menu', false, true),
+        document.getElementById('quizQuestion'))
+      return true
     }
 
     if (success[0] === 'Complete') {
       const time = getTimeTaken()
-      const save = [nickname, time]
-      saveHighscore(save)
-      return getQuizComplete(success[1])
+      saveHighscore([nickname, time])
+      switchView(idOfWindow,
+        createGeneric('QUIZ COMPLETE!', success[1], 'Reload page for menu', false, true),
+        document.getElementById('quizQuestion'))
+      return true
     }
 
     setNextURL(success.nextURL)
-    return getCongratz(success.message)
+    switchView(idOfWindow,
+      createGeneric('Correct!', success.message, 'Next Question', true, false),
+      document.getElementById('quizQuestion'))
+    return false
   } catch (error) {
     console.log(error)
   }
-}
-
-/**
- * Sets title of HTML doc, calls to create HTML elements.
- *
- * @param {string} message Message from server to be shown
- *
- * @returns {boolean} False
- */
-function getCongratz (message) {
-  return createAnswerCorrect(message)
-}
-
-/**
- * Sets title of HTML doc, calls to create HTML elements.
- *
- * @param {string} message Message from server to be shown
- *
- * @returns {boolean} True
- */
-function getQuizOver (message) {
-  return createQuizOver(message)
-}
-
-/**
- * Sets title of HTML doc, calls to create HTML elements.
- *
- * @param {string} message Message from server to be shown
- *
- * @returns {boolean} True
- */
-function getQuizComplete (message) {
-  return createQuizComplete(message)
 }
 
 /**

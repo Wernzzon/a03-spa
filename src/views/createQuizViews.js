@@ -10,11 +10,12 @@ let checkedButton
 /**
  * Creates HTML elements for the menu, and appends them to be visible.
  *
+ * @param {Array} alert If true an alert get appended
  * @returns {HTMLDivElement} Menu
  */
-function createMenuElements () {
+function createMenuElements (alert) {
   const container = document.createElement('div')
-  container.id = 'quizContainer'
+  container.id = 'quizMenu'
 
   const h1 = document.createElement('h1')
   h1.textContent = 'Welcome to the LNU quiz'
@@ -45,6 +46,7 @@ function createMenuElements () {
   container.append(nickname)
   container.append(gameBtn)
   container.append(scoreBtn)
+  if (!alert[0]) container.appendChild(alert(alert[1]))
 
   return container
 }
@@ -58,6 +60,7 @@ function createMenuElements () {
  */
 function createQuizElements (params) {
   const container = document.createElement('div')
+  container.id = 'quizQuestion'
 
   const numOfQuestion = document.createElement('p')
   numOfQuestion.id = 'numOfQuestion'
@@ -117,87 +120,35 @@ function createQuizElements (params) {
 }
 
 /**
- * Creates HTML elements to show the answer was correct, and appends them to be visible.
+ * Creates HTML elements to show status of the quiz.
  *
+ * @param {string} h1Text Text for h1 tag
  * @param {string} serverMsg Message from server to be shown
+ * @param {string} reloadOrNext Reload or next question text
+ * @param {boolean} id Either add id on action or not
+ * @param {boolean} score Either append highscore list or not
  *
- * @returns {boolean} false
+ * @returns {HTMLDivElement} Generic container-div
  */
-function createAnswerCorrect (serverMsg) {
-  const container = document.getElementById('container')
-  container.innerHTML = ''
+function createGeneric (h1Text, serverMsg, reloadOrNext, id, score) {
+  const container = document.createElement('div')
 
   const h1 = document.createElement('h1')
-  h1.textContent = 'Correct!'
-
-  const h5 = document.createElement('h5')
-  h5.textContent = serverMsg
-  h5.id = 'serverMsg'
-
-  const next = document.createElement('button')
-  next.textContent = 'Next Question'
-  next.id = 'nextQuestion'
-
-  container.append(h1)
-  container.append(h5)
-  container.append(next)
-
-  return false
-}
-
-/**
- * Creates HTML elements to show the quiz is over, and appends them to be visible.
- *
- * @param {string} serverMsg Message from server to be shown
- *
- * @returns {boolean} True
- */
-function createQuizOver (serverMsg) {
-  const container = document.getElementById('container')
-  container.innerHTML = ''
-
-  const h1 = document.createElement('h1')
-  h1.textContent = 'GAME OVER'
+  h1.textContent = h1Text
 
   const message = document.createElement('h5')
   message.textContent = serverMsg
 
-  const reloadInst = document.createElement('p')
-  reloadInst.textContent = 'Reload page for menu'
+  const action = document.createElement('p')
+  action.textContent = reloadOrNext
+  if (id) action.id = 'next'
 
   container.append(h1)
   container.append(message)
-  container.append(reloadInst)
+  container.append(action)
+  if (score) container.append(createHighscore())
 
-  return true
-}
-
-/**
- * Creates HTML elements to show the quiz is completed, and appends them to be visible.
- *
- * @param {string} serverMsg Message from server to be shown
- *
- * @returns {boolean} True
- */
-function createQuizComplete (serverMsg) {
-  const container = document.getElementById('container')
-  container.innerHTML = ''
-
-  const h1 = document.createElement('h1')
-  h1.textContent = 'QUIZ COMPLETE'
-
-  const message = document.createElement('h5')
-  message.textContent = serverMsg
-
-  const reloadInst = document.createElement('p')
-  reloadInst.textContent = 'Reload page for menu'
-
-  container.append(h1)
-  container.append(message)
-  container.append(reloadInst)
-  container.append(createHighscore())
-
-  return true
+  return container
 }
 
 /**
@@ -206,9 +157,8 @@ function createQuizComplete (serverMsg) {
  * @returns {HTMLDivElement} Div containing a highscore table
  */
 function createHighscore () {
-  if (document.getElementById('scoreWrapper')) {
-    document.getElementById('scoreWrapper').remove()
-  }
+  if (document.getElementById('scoreWrapper')) document.getElementById('scoreWrapper').remove()
+
   const wrapper = document.createElement('div')
   wrapper.id = 'scoreWrapper'
 
@@ -218,29 +168,7 @@ function createHighscore () {
 
   const topFive = getTopFiveTimes()
   if (topFive !== false) {
-    const table = document.createElement('table')
-    table.id = 'highscoreTable'
-
-    const tBody = document.createElement('tbody')
-
-    for (const a of topFive) {
-      const row = document.createElement('tr')
-
-      for (let i = 0; i < 2; i++) {
-        const cell = document.createElement('td')
-        let cellText
-        if (i % 2 !== 0) {
-          cellText = document.createTextNode(a[1])
-        } else {
-          cellText = document.createTextNode(a[0])
-        }
-        cell.append(cellText)
-        row.append(cell)
-      }
-      tBody.append(row)
-    }
-    table.append(tBody)
-    wrapper.append(table)
+    wrapper.append(makeTable(topFive))
   } else {
     const noScore = document.createElement('p')
     noScore.textContent = 'No highscores to show!'
@@ -248,6 +176,39 @@ function createHighscore () {
   }
 
   return wrapper
+}
+
+/**
+ * Creates highscore-table.
+ *
+ * @param {string[]} topFive Top 5 lowest times
+ * @returns {HTMLTableElement} Highscore-table
+ */
+function makeTable (topFive) {
+  const table = document.createElement('table')
+  table.id = 'highscoreTable'
+
+  const tBody = document.createElement('tbody')
+
+  for (const a of topFive) {
+    const row = document.createElement('tr')
+
+    for (let i = 0; i < 2; i++) {
+      const cell = document.createElement('td')
+      let cellText
+      if (i % 2 !== 0) {
+        cellText = document.createTextNode(a[1])
+      } else {
+        cellText = document.createTextNode(a[0])
+      }
+      cell.append(cellText)
+      row.append(cell)
+    }
+    tBody.append(row)
+  }
+  table.append(tBody)
+
+  return table
 }
 
 /**
@@ -301,9 +262,7 @@ function setupTimer (durationOfQuestion, idOfElement) {
 export {
   createMenuElements,
   createQuizElements,
-  createAnswerCorrect,
-  createQuizOver,
-  createQuizComplete,
+  createGeneric,
   getCheckedButton,
   alert
 }
