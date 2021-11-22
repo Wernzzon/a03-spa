@@ -142,7 +142,7 @@ body {
   backface-visibility: hidden !important;
 }
 
-#quizContainer {
+#quizMenu {
   flex-direction: column;
   width: 100%;
   text-align: center;
@@ -150,12 +150,12 @@ body {
   z-index: 2;
 }
 
-#quizContainer h1 {
+#quizMenu h1 {
   font-family: 'Karla', sans-serif;
   font-size: xx-large;
 }
 
-#quizContainer p, h5 {
+#quizManu p, h5 {
   font-family: 'Courier New', Courier, monospace;
   font-size: 2rem;
 }
