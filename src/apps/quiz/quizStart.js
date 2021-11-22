@@ -2,29 +2,29 @@
 
 // Imports
 import { getMenu, getQuiz, checkAnswer } from '../../views/quizViews'
-import { alert } from '../../views/createQuizViews'
 import { nicknameExists } from './storage'
+import { switchView } from '../../views/windowView'
 
 let firstCall = true
 let checker
 let nickname
+let idOfWindow
 
 /**
  * Load in functions to render the menu for the quiz.
  *
+ * @param {string} id Id of current window
  * @param {Array} params If alert should be called or not
  *
  * @returns {HTMLDivElement} Menu
  */
-function loadMenu (params) {
-  try {
-    if (!params[0]) {
-      return [getMenu(), alert(params[1])]
-    }
+function loadMenu (id, params) {
+  if (idOfWindow === null) {
+    idOfWindow = id
     return getMenu()
-  } catch (error) {
-    console.log(error)
   }
+
+  switchView(idOfWindow, getMenu(params), document.getElementById(idOfWindow).childNodes()[1])
 }
 
 /**

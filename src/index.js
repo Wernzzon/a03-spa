@@ -42,7 +42,7 @@ function addEventListeners () {
  */
 function addApp (appName, num) {
   if (appName === settingsCounter[0]) {
-    appendApplication(`${appName}${num}`, getMenu())
+    appendApplication(`${appName}${num}`, getMenu(`${appName}${num}`))
     setNewGameListener()
   }
 
