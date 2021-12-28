@@ -53,7 +53,6 @@ function checkpoint () {
   const res = saveNickname()
   if (!res[0]) {
     window.args = res
-    console.log(window.id, window.args)
     loadMenu()
     return
   }
@@ -95,13 +94,12 @@ function saveNickname () {
 async function loadQuiz () {
   try {
     checker = await getQuiz(window.id, firstCall)
-    console.log(checker)
     if (checker === true) {
       firstCall = false
     }
     document.getElementById('sendAnswer').addEventListener('click', loadAnswer)
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 

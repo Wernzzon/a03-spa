@@ -4,6 +4,7 @@ import { createDesktop } from './views/desktopView'
 import { createWindow, appendApplication, addEventListenersOnWindow } from './views/windowView'
 import { setSwitchEvent, showMemory } from './apps/memory/game'
 import { setNewGameListener, loadMenu } from './apps/quiz/quizStart'
+import { chatWindow, setListener } from './views/chatView'
 
 window.addEventListener('load', main)
 const settingsCounter = ['settings', 0]
@@ -46,7 +47,8 @@ function addApp (appName, num) {
   }
 
   if (appName === chatCounter[0]) {
-    return
+    appendApplication(`${appName}${num}`, chatWindow(`${appName}${num}`))
+    setListener()
   }
 
   if (appName === memoryCounter[0]) {
