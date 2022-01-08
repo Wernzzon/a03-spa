@@ -4,7 +4,8 @@ import { switchView } from './windowView'
 const info = {
   id: '',
   username: '',
-  changeToChatView: false
+  changeToChatView: false,
+  channel: ''
 }
 
 /**
@@ -16,15 +17,22 @@ const info = {
 function chatWindow (id) {
   if (info.id === '') {
     info.id = id
+    info.username = checkForUsername()
     console.log(id, info)
   }
 
   const chatContainer = document.createElement('div')
   chatContainer.id = 'chatCont'
 
-  if (!checkForUsername()) {
+  if (!info.username) {
     console.log('mpoojkpo p  pojpj pjpjjlij')
     appendChildrenToParent(chatContainer, usernameView())
+    changeWindowParams(false)
+    return chatContainer
+  }
+  if (info.changeToChatView) {
+    console.log('chatting')
+    appendChildrenToParent(chatContainer, chatView())
     changeWindowParams(false)
     return chatContainer
   }
@@ -56,7 +64,7 @@ function setListener () {
  * @returns {Array} With HTMLDivElements
  */
 function usernameView () {
-  return [header(false, [false]), chooseUsername()]
+  return [header(false, false), chooseUsername()]
 }
 
 /**
@@ -65,17 +73,16 @@ function usernameView () {
  * @returns {Array} With HTMLDivElements
  */
 function channelView () {
-  return [header(true, [false]), chooseChannel()]
+  return [header(true, false), chooseChannel()]
 }
 
 /**
  * Creates chat view.
  *
- * @param {string} channel Chosen channel
  * @returns {Array} With HTMLDivElements
  */
-function chatView (channel) {
-  return [header(true, [true, channel]), messageWindow(), messageInput()]
+function chatView () {
+  return [header(true, true), messageWindow(), messageInput()]
 }
 
 /**
@@ -139,15 +146,11 @@ function chooseChannel () {
   const p = document.createElement('p')
   p.textContent = 'Choose channel...'
 
-  // const list = document.createElement('div')
-  // list.appendChild = makeChannelList(['Start', '1DV525', 'Network'])
-
   const confirm = document.createElement('button')
   confirm.id = 'confirmChannel'
   confirm.textContent = 'Start chatting'
 
   cont.appendChild(p)
-  // cont.appendChild(list)
   cont.appendChild(makeChannelList(['Start', '1DV525', 'Network']))
   cont.appendChild(confirm)
   return cont
@@ -163,11 +166,19 @@ function makeChannelList (channels) {
   channels.forEach(channel => {
     const opt = document.createElement('input')
     opt.type = 'radio'
-    opt.name = opt.id = opt.value = channel
+    opt.name = 'channels'
+    opt.id = channel
+    /**
+     * Keep record of which button is checked.
+     */
+    opt.onclick = function () {
+      info.channel = opt.id
+    }
 
     const label = document.createElement('label')
     label.setAttribute('for', opt.id)
-    label.textContent = opt.name
+    label.textContent = channel
+
     wrapper.appendChild(opt)
     wrapper.appendChild(label)
   })
@@ -180,8 +191,8 @@ function makeChannelList (channels) {
  */
 function setListenerForChannelView () {
   document.getElementById('confirmChannel').addEventListener('click', function () {
-    switchView(info.id, appendChildrenToParent(document.getElementById('chatCont'), chatView()),
-      document.getElementById('chatCont').firstChild.nextSibling)
+    console.log(document.getElementById('chatCont').firstChild, document.getElementById('chatCont').firstChild.nextSibling)
+    document.getElementById(info.id).firstChild.nextSibling.replaceWith(chatWindow())
   })
 }
 
@@ -189,7 +200,7 @@ function setListenerForChannelView () {
  * Creates header for chat window, with channel displayed.
  *
  * @param {boolean} appendUser True or false
- * @param {Array} appendChannel [boolean, string] True or false, name of channel
+ * @param {boolean} appendChannel True or false
  * @returns {HTMLDivElement} Container for header
  */
 function header (appendUser, appendChannel) {
@@ -204,14 +215,15 @@ function header (appendUser, appendChannel) {
 
   const title = document.createElement('h3')
   title.textContent = 'CHAT'
+  header.appendChild(title)
 
-  if (appendChannel[0]) {
+  if (appendChannel) {
     const channel = document.createElement('p')
-    channel.textContent = appendChannel[1]
+    channel.textContent = info.channel
     header.appendChild(channel)
   }
 
-  header.appendChild(title)
+  header.classList.add('evenly')
   return header
 }
 
@@ -241,9 +253,10 @@ function messageInput () {
   inputField.name = 'messageField'
 
   const sendBtn = document.createElement('button')
+  sendBtn.type = 'button'
   sendBtn.id = 'sendMsg'
   sendBtn.addEventListener('click', function () {
-    constructMsg(inputField.value, 'user')
+    constructMsg(inputField.value, info.username)
     inputField.value = ''
   })
 

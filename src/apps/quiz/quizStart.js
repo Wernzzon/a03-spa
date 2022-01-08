@@ -109,7 +109,7 @@ async function loadQuiz () {
 async function loadAnswer () {
   try {
     // eslint-disable-next-line no-unused-expressions
-    await checkAnswer(nickname) ? '' : document.getElementById('nextQuestion').addEventListener('click', loadQuiz)
+    await checkAnswer(window.id, nickname) ? '' : document.getElementById('next').addEventListener('click', loadQuiz)
   } catch (error) {
     console.log(error)
   }

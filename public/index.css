@@ -155,7 +155,7 @@ body {
   font-size: xx-large;
 }
 
-#quizManu p, h5 {
+#quizMenu p, h5 {
   font-family: 'Courier New', Courier, monospace;
   font-size: 2rem;
 }
@@ -175,4 +175,32 @@ body {
   border: 0.1rem solid black;
   padding: 0.5rem;
   text-align: left;
+}
+
+/* chat */
+#chatCont {
+  display: flex;
+  flex-direction: column;
+}
+#chatHead {
+  height: 4rem;
+  width: 100%;
+  display: inline-flex;
+}
+
+#chatHead p, h3 {
+  font-family: 'Karla', sans-serif;
+  font-size: large;
+}
+.evenly {
+  justify-content: space-evenly;
+}
+.center {
+  justify-content: center;
+}
+
+#messageInput {
+  border: 0.1rem solid black;
+  width: 100%;
+  height: calc(100% - 4rem);
 }

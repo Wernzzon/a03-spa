@@ -8,8 +8,6 @@ import { saveHighscore } from '../apps/quiz/storage'
 import { getTimeTaken, startCount } from '../apps/quiz/timer'
 import { switchView } from './windowView'
 
-let idOfWindow
-
 /**
  * Sets title of HTML doc, calls to create HTML elements.
  *
@@ -42,17 +40,18 @@ async function getQuiz (id, firstCall) {
 /**
  * Checks if answer is correct or false.
  *
+ * @param {string} id Id of current window
  * @param {string} nickname To be stored
  *
  * @returns {boolean} True or false
  */
-async function checkAnswer (nickname) {
+async function checkAnswer (id, nickname) {
   try {
     const answer = getAnswerFromUser()
     const success = await sendAnswerToServer(getURL(), answer)
 
     if (success[0] === 'GameOver') {
-      switchView(idOfWindow,
+      switchView(id,
         createGeneric('GAME OVER', success[1], 'Reload page for menu', false, true),
         document.getElementById('quizQuestion'))
       return true
@@ -61,14 +60,14 @@ async function checkAnswer (nickname) {
     if (success[0] === 'Complete') {
       const time = getTimeTaken()
       saveHighscore([nickname, time])
-      switchView(idOfWindow,
+      switchView(id,
         createGeneric('QUIZ COMPLETE!', success[1], 'Reload page for menu', false, true),
         document.getElementById('quizQuestion'))
       return true
     }
 
     setNextURL(success.nextURL)
-    switchView(idOfWindow,
+    switchView(id,
       createGeneric('Correct!', success.message, 'Next Question', true, false),
       document.getElementById('quizQuestion'))
     return false
