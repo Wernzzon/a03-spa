@@ -199,6 +199,13 @@ body {
   justify-content: center;
 }
 
+#userCont, #channelCont {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-family: 'Karla', sans-serif;
+}
+
 #messageInput {
   border: 0.1rem solid black;
   width: 100%;
