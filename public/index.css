@@ -1,4 +1,5 @@
 html {
+  font-family: 'Karla', sans-serif;
   font-size: 10px;
 }
 
@@ -60,10 +61,10 @@ body {
 }
 
 #overlay {
-  position: relative;
-  left: 7.5rem;
-  width: 45rem;
-  height: 35rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: larger;
 }
 
 #countCont {
@@ -143,7 +144,6 @@ body {
 }
 
 .congratz {
-  font-family: 'Karla', sans-serif;
   font-size: larger;
   text-align: center;
 }
@@ -157,7 +157,6 @@ body {
 }
 
 #quizMenu h1 {
-  font-family: 'Karla', sans-serif;
   font-size: xx-large;
 }
 
@@ -195,7 +194,6 @@ body {
 }
 
 #chatHead p, h3 {
-  font-family: 'Karla', sans-serif;
   font-size: large;
 }
 .evenly {
@@ -209,7 +207,6 @@ body {
   display: flex;
   flex-direction: column;
   text-align: center;
-  font-family: 'Karla', sans-serif;
 }
 
 #messageInput {

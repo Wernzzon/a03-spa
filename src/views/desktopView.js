@@ -24,9 +24,9 @@ function createDesktop (iconNames) {
 function createIconMenu (filenames) {
   const iconWrapper = document.createElement('div')
   iconWrapper.id = 'iconContainer'
-  for (let i = 0; i < 3; i++) {
-    iconWrapper.appendChild(createIcon(filenames[i]))
-  }
+  filenames.forEach(icon => {
+    iconWrapper.appendChild(createIcon(icon))
+  })
   return iconWrapper
 }
 
