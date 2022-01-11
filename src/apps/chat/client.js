@@ -1,26 +1,77 @@
-const connections = []
+const connections = new Map()
 /**
  * Connects to websocket and logs when open.
+ *
+ * @param {string} windowId Id of window
  */
-function connect () {
+function connect (windowId) {
   const socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
-  connections.push(socket)
+  setEvents(socket)
+  connections.set(windowId, socket)
+}
+
+/**
+ * Sets events for WebSocket.
+ *
+ * @param {WebSocket} socket WebSocket
+ */
+function setEvents (socket) {
   /**
    * Log when connection is open.
+   *
+   * @param {Event} event event
    */
-  socket.onopen = function () {
+  socket.onopen = function (event) {
     console.log('Websocket now open')
   }
+  /**
+   * Log when connection is closed.
+   *
+   * @param {Event} event event
+   */
+  socket.onclose = function (event) {
+    console.log('Connection closed')
+  }
+
+  /**
+   * Log when connection recevied a message.
+   *
+   * @param {Event} event event
+   */
+  socket.onmessage = function (event) {
+    console.log(event.data)
+  }
+
+  /**
+   * Log when connection has an error.
+   *
+   * @param {Event} event event
+   */
+  socket.onerror = function (event) {
+    console.error(event.data)
+  }
+}
+
+/**
+ * Close connection associated with the windowId.
+ *
+ * @param {string} windowId Id of window
+ * @returns {boolean} True or false
+ */
+function close (windowId) {
+  if (connections.get(windowId).bufferedAmount() !== 0) return false
+
+  return connections.get(windowId).CLOSED
 }
 
 /**
  * Sends message in JSON format.
  *
  * @param {JSON} data JSON data to be sent
- * @param {number} index Index of connection
+ * @param {string} windowId Index of connection
  */
-function send (data, index) {
-  connections[index].send(data)
+function send (data, windowId) {
+  connections.get(windowId).send(data)
 }
 
 /**
@@ -34,22 +85,22 @@ function receive () {
 /**
  * Constructs message into JSON, calls send.
  *
- * @param {number} index Index of connection
- * @param {string} msgToSend Message user wants to send
- * @param {string} user Name of the user sending
+ * @param {string} windowId Index of connection
+ * @param {string[]} params [data, username, channel]
  */
-function constructMsg (index, msgToSend, user) {
+function constructMsg (windowId, params) {
   const msg = {
     type: 'message',
-    data: msgToSend,
-    username: user,
-    channel: 'channel',
+    data: params[0],
+    username: params[1],
+    channel: params[2],
     key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
   }
-  send(JSON.stringify(msg), index)
+  send(JSON.stringify(msg), windowId)
 }
 
 export {
   connect,
-  constructMsg
+  constructMsg,
+  close
 }

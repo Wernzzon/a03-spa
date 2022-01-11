@@ -20,7 +20,6 @@ body {
   width: 100%;
   height: 100%;
   padding: 1.6rem;
-  border: 0.1rem solid black;
 }
 
 #iconContainer {
@@ -53,6 +52,7 @@ body {
   width: 60rem;
   height: 40rem;
   z-index: 1;
+  background-color: gray;
 }
 
 .close {
@@ -140,6 +140,12 @@ body {
   height: 100%;
   -webkit-backface-visibility: hidden !important;
   backface-visibility: hidden !important;
+}
+
+.congratz {
+  font-family: 'Karla', sans-serif;
+  font-size: larger;
+  text-align: center;
 }
 
 #quizMenu {

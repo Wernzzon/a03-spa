@@ -142,7 +142,7 @@ function blinkNoMatch (deck) {
  */
 function gameOver (deck) {
   if (matchedCards.length === deck.getDeck().length) {
-    switchView(thisWindowId, congrats(attempts), document.getElementById('memory'))
+    switchView(thisWindowId, congrats(attempts), document.getElementById(thisWindowId).firstChild.nextSibling)
 
     return true
   }
