@@ -1,3 +1,5 @@
+import { appendMessage } from '../../views/chatView'
+
 const connections = new Map()
 /**
  * Connects to websocket and logs when open.
@@ -6,7 +8,7 @@ const connections = new Map()
  */
 function connect (windowId) {
   const socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
-  setEvents(socket)
+  setEvents(socket, windowId)
   connections.set(windowId, socket)
 }
 
@@ -14,22 +16,19 @@ function connect (windowId) {
  * Sets events for WebSocket.
  *
  * @param {WebSocket} socket WebSocket
+ * @param {string} windowId Id of window
  */
-function setEvents (socket) {
+function setEvents (socket, windowId) {
   /**
    * Log when connection is open.
-   *
-   * @param {Event} event event
    */
-  socket.onopen = function (event) {
+  socket.onopen = function () {
     console.log('Websocket now open')
   }
   /**
    * Log when connection is closed.
-   *
-   * @param {Event} event event
    */
-  socket.onclose = function (event) {
+  socket.onclose = function () {
     console.log('Connection closed')
   }
 
@@ -40,6 +39,7 @@ function setEvents (socket) {
    */
   socket.onmessage = function (event) {
     console.log(event.data)
+    appendMessage(windowId, event)
   }
 
   /**

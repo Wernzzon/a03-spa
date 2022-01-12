@@ -18,9 +18,11 @@ function createMenuElements (params) {
   container.id = 'quizMenu'
 
   const h1 = document.createElement('h1')
+  h1.classList.add('xxLarge')
   h1.textContent = 'Welcome to the LNU quiz'
 
   const intro = document.createElement('p')
+  intro.classList.add('large')
   intro.textContent = 'Pick a nickname and start the quiz'
 
   const nickname = document.createElement('input')
@@ -132,12 +134,15 @@ function createGeneric (h1Text, serverMsg, reloadOrNext, id, score) {
   const container = document.createElement('div')
 
   const h1 = document.createElement('h1')
+  h1.classList.add('xxLarge')
   h1.textContent = h1Text
 
   const message = document.createElement('h5')
+  message.classList.add('large')
   message.textContent = serverMsg
 
   const action = document.createElement('p')
+  action.classList.add('large')
   action.textContent = reloadOrNext
   if (id) action.id = 'next'
 
@@ -161,6 +166,7 @@ function createHighscore () {
   wrapper.id = 'scoreWrapper'
 
   const scoreTitle = document.createElement('h3')
+  scoreTitle.classList.add('medium')
   scoreTitle.textContent = 'Highscores'
   wrapper.append(scoreTitle)
 
@@ -169,6 +175,7 @@ function createHighscore () {
     wrapper.append(makeTable(topFive))
   } else {
     const noScore = document.createElement('p')
+    noScore.classList.add('medium')
     noScore.textContent = 'No highscores to show!'
     wrapper.append(noScore)
   }
@@ -218,6 +225,7 @@ function makeTable (topFive) {
  */
 function alert (msg) {
   const alertMsg = document.createElement('p')
+  alertMsg.classList.add('large')
   alertMsg.textContent = msg
 
   return alertMsg

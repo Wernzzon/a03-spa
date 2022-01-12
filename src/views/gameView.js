@@ -41,12 +41,12 @@ function counter () {
   countContainer.classList.add('countCont')
 
   const atmps = document.createElement('span')
-  atmps.classList.add('counter')
+  atmps.classList.add('xLarge')
   atmps.textContent = 'Attempts: '
 
   const atmpsCounter = document.createElement('span')
   atmpsCounter.id = 'attempts'
-  atmpsCounter.classList.add('counter')
+  atmpsCounter.classList.add('xLarge')
   atmpsCounter.textContent = '0'
 
   countContainer.appendChild(atmps)
@@ -65,7 +65,13 @@ function giveOptions () {
   container.id = 'overlay'
 
   const inst = document.createElement('p')
+  inst.classList.add('xxLarge')
   inst.textContent = 'Choose which layout you want for the memorycards'
+
+  const choosen = document.createElement('span')
+  choosen.classList.add('large')
+  choosen.id = 'layoutOfChoice'
+  choosen.textContent = 'Choosen layout will appear here'
 
   const wrapper = document.createElement('div')
   for (const value of options) {
@@ -74,11 +80,13 @@ function giveOptions () {
     btn.textContent = value
     btn.addEventListener('click', e => {
       choosenLayout = btn.textContent
+      choosen.textContent = choosenLayout
     })
     wrapper.appendChild(btn)
   }
 
   container.appendChild(inst)
+  container.appendChild(choosen)
   container.appendChild(wrapper)
   container.appendChild(confirmButton())
 
@@ -93,7 +101,7 @@ function giveOptions () {
  */
 function congrats (attempts) {
   const tmp = document.createElement('div')
-  tmp.classList.add('congratz')
+  tmp.classList.add('xLarge', 'centerText')
 
   const title = document.createElement('h2')
   title.textContent = 'Congratulations you won'

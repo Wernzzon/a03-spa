@@ -6,9 +6,8 @@
  * @param {string[]} iconNames Filenames of icon-images
  */
 function createDesktop (iconNames) {
-  document.body.style.width = window.innerWidth
-  document.body.style.height = window.innerHeight
   const dsktp = document.createElement('div')
+  dsktp.classList.add('backgroundCover')
   dsktp.id = 'desktop'
   dsktp.appendChild(createIconMenu(iconNames))
   document.body.appendChild(dsktp)

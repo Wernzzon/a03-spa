@@ -25,18 +25,15 @@ function chatWindow (id) {
   chatContainer.id = 'chatCont'
 
   if (!info.username) {
-    console.log('mpoojkpo p  pojpj pjpjjlij')
     appendChildrenToParent(chatContainer, usernameView())
     changeWindowParams(false)
     return chatContainer
   }
   if (info.changeToChatView) {
-    console.log('chatting')
     appendChildrenToParent(chatContainer, chatView())
     changeWindowParams(false)
     return chatContainer
   }
-  console.log('jfoiejfoijewjfdwjef')
   appendChildrenToParent(chatContainer, channelView())
   changeWindowParams(true)
   return chatContainer
@@ -107,6 +104,7 @@ function chooseUsername () {
   cont.id = 'userCont'
 
   const p = document.createElement('p')
+  p.classList.add('medium')
   p.textContent = 'Choose your username...'
 
   const input = document.createElement('input')
@@ -144,6 +142,7 @@ function chooseChannel () {
   cont.id = 'channelCont'
 
   const p = document.createElement('p')
+  p.classList.add('medium')
   p.textContent = 'Choose channel...'
 
   const confirm = document.createElement('button')
@@ -176,6 +175,7 @@ function makeChannelList (channels) {
     }
 
     const label = document.createElement('label')
+    label.classList.add('medium')
     label.setAttribute('for', opt.id)
     label.textContent = channel
 
@@ -206,6 +206,7 @@ function setListenerForChannelView () {
 function header (appendUser, appendChannel) {
   const header = document.createElement('div')
   header.id = 'chatHead'
+  header.classList.add('xLarge')
 
   if (appendUser) {
     const user = document.createElement('p')
@@ -233,10 +234,22 @@ function header (appendUser, appendChannel) {
  * @returns {HTMLDivElement} Container for all messages sent and received
  */
 function messageWindow () {
-  const messages = document.createElement('div')
+  const messages = document.createElement('ul')
   messages.id = 'messages'
 
   return messages
+}
+
+/**
+ * Appends message to message container.
+ *
+ * @param {string} windowId Id of window
+ * @param {Event} event event
+ */
+function appendMessage (windowId, event) {
+  const message = document.createElement('li')
+  message.textContent = event.data
+  document.getElementById(windowId).firstChild.nextSibling.appendChild(message)
 }
 
 /**
@@ -277,5 +290,6 @@ function checkForUsername () {
 
 export {
   chatWindow,
-  setListener
+  setListener,
+  appendMessage
 }

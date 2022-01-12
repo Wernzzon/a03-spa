@@ -5,9 +5,10 @@ import { createWindow, appendApplication, addEventListenersOnWindow } from './vi
 import { setSwitchEvent, showMemory } from './apps/memory/game'
 import { setNewGameListener, loadMenu } from './apps/quiz/quizStart'
 import { chatWindow, setListener } from './views/chatView'
+import { settings } from './helpers/backgroundSettings'
 
 window.addEventListener('load', main)
-const settings = ['settings', 0]
+const settingsCounter = ['settings', 0]
 const quizCounter = ['quiz', 0]
 const chatCounter = ['chat', 0]
 const memoryCounter = ['memory', 0]
@@ -17,7 +18,7 @@ const memoryCounter = ['memory', 0]
  */
 function main () {
   document.title = 'PWD'
-  createDesktop([settings[0], quizCounter[0], chatCounter[0], memoryCounter[0]])
+  createDesktop([settingsCounter[0], quizCounter[0], chatCounter[0], memoryCounter[0]])
   addEventListeners()
 }
 
@@ -42,6 +43,10 @@ function addEventListeners () {
  * @param {number} num Number of instance
  */
 function addApp (appName, num) {
+  if (appName === settingsCounter[0]) {
+    appendApplication(`${appName}${num}`, settings())
+  }
+
   if (appName === quizCounter[0]) {
     appendApplication(`${appName}${num}`, loadMenu(`${appName}${num}`))
     setNewGameListener()
@@ -66,6 +71,9 @@ function addApp (appName, num) {
  * @returns {number} Returns number of instance
  */
 function addInstance (param) {
+  if (param === settingsCounter[0]) {
+    return ++settingsCounter[1]
+  }
   if (param === quizCounter[0]) {
     return ++quizCounter[1]
   }
