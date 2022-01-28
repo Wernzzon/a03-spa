@@ -171,10 +171,11 @@ body {
 #chatCont {
   display: flex;
   flex-direction: column;
+  position: relative;
+  height: calc(100% - 1.9rem);
 }
 
 #chatHead {
-  height: 4rem;
   width: 100%;
   display: inline-flex;
 }
@@ -191,10 +192,15 @@ body {
   text-align: center;
 }
 
+#messages {
+  display: flex;
+  flex-direction: column;
+}
+
 #messageInput {
-  border: 0.1rem solid black;
+  position: absolute;
+  bottom: 0;
   width: 100%;
-  height: calc(100% - 4rem);
 }
 
 /* Design classes */

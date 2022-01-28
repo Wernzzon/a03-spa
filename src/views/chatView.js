@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
-import { constructMsg } from '../apps/chat/client'
-import { switchView } from './windowView'
+import { constructMsg, connect } from '../apps/chat/client'
 const info = {
-  id: '',
+  id: [],
   username: '',
   changeToChatView: false,
   channel: ''
@@ -15,7 +13,7 @@ const info = {
  * @returns {HTMLDivElement} Complete chat application
  */
 function chatWindow (id) {
-  if (info.id === '') {
+  if (info.id.includes !== id) {
     info.id = id
     info.username = checkForUsername()
     console.log(id, info)
@@ -32,6 +30,7 @@ function chatWindow (id) {
   if (info.changeToChatView) {
     appendChildrenToParent(chatContainer, chatView())
     changeWindowParams(false)
+    connect(info.id)
     return chatContainer
   }
   appendChildrenToParent(chatContainer, channelView())
@@ -126,7 +125,6 @@ function chooseUsername () {
 function setListenerForUsernameView () {
   document.getElementById('confirmUsername').addEventListener('click', function () {
     window.localStorage.setItem('chatUsername', info.username = document.getElementById('chatUsername').value)
-    console.log(document.getElementById(info.id).firstChild, document.getElementById(info.id).firstChild.nextSibling)
     document.getElementById(info.id).firstChild.nextSibling.replaceWith(chatWindow())
     setListener()
   })
@@ -191,7 +189,6 @@ function makeChannelList (channels) {
  */
 function setListenerForChannelView () {
   document.getElementById('confirmChannel').addEventListener('click', function () {
-    console.log(document.getElementById('chatCont').firstChild, document.getElementById('chatCont').firstChild.nextSibling)
     document.getElementById(info.id).firstChild.nextSibling.replaceWith(chatWindow())
   })
 }
@@ -244,13 +241,23 @@ function messageWindow () {
  * Appends message to message container.
  *
  * @param {string} windowId Id of window
- * @param {Event} event event
+ * @param {object} object Object from parsed JSON
  */
-function appendMessage (windowId, event) {
+function appendMessage (windowId, object) {
   const message = document.createElement('li')
-  message.textContent = event.data
-  document.getElementById(windowId).firstChild.nextSibling.appendChild(message)
+  message.textContent = object.data
+  document.getElementById(windowId).firstChild.nextSibling.firstChild.nextSibling.appendChild(message)
 }
+
+// /**
+//  * Formats incoming data to a message.
+//  *
+//  * @param {object} data Incoming data
+//  * @returns {string} Formatted data
+//  */
+// function formatData (data) {
+//   return `${data.username}${data.data}`
+// }
 
 /**
  * Creates message inputfield and send button.
@@ -261,15 +268,17 @@ function messageInput () {
   const inputCont = document.createElement('div')
   inputCont.id = 'messageInput'
 
-  const inputField = document.createElement('input')
-  inputField.type = 'text'
+  const inputField = document.createElement('textarea')
+  inputField.rows = '2'
+  inputField.cols = '70'
   inputField.name = 'messageField'
 
   const sendBtn = document.createElement('button')
   sendBtn.type = 'button'
+  sendBtn.textContent = 'Send'
   sendBtn.id = 'sendMsg'
   sendBtn.addEventListener('click', function () {
-    constructMsg(inputField.value, info.username)
+    constructMsg(info.id, [inputField.value, info.username, info.channel])
     inputField.value = ''
   })
 

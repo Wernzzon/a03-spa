@@ -43,6 +43,7 @@ function addEventListeners () {
  * @param {number} num Number of instance
  */
 function addApp (appName, num) {
+  console.log(appName, num)
   if (appName === settingsCounter[0]) {
     appendApplication(`${appName}${num}`, settings())
   }

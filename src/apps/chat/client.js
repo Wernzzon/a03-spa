@@ -19,6 +19,9 @@ function connect (windowId) {
  * @param {string} windowId Id of window
  */
 function setEvents (socket, windowId) {
+  document.getElementById(`close-${windowId}`).addEventListener('click', e => {
+    close(windowId)
+  })
   /**
    * Log when connection is open.
    */
@@ -39,7 +42,10 @@ function setEvents (socket, windowId) {
    */
   socket.onmessage = function (event) {
     console.log(event.data)
-    appendMessage(windowId, event)
+    const parsed = JSON.parse(event.data)
+    if (parsed.username !== 'The Server') {
+      appendMessage(windowId, parsed)
+    }
   }
 
   /**
@@ -59,9 +65,9 @@ function setEvents (socket, windowId) {
  * @returns {boolean} True or false
  */
 function close (windowId) {
-  if (connections.get(windowId).bufferedAmount() !== 0) return false
+  if (connections.get(windowId).bufferedAmount !== 0) return false
 
-  return connections.get(windowId).CLOSED
+  return connections.get(windowId).close()
 }
 
 /**
@@ -101,6 +107,5 @@ function constructMsg (windowId, params) {
 
 export {
   connect,
-  constructMsg,
-  close
+  constructMsg
 }
