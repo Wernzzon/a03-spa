@@ -58,7 +58,6 @@ function dragElement (elmnt) {
  * @param {string} itemId Id of element
  */
 function makeElementDraggable (itemId) {
-  // dragElement(document.getElementById(`drag-${itemId}`))
   dragElement(document.getElementById(itemId))
 }
 
