@@ -6,7 +6,7 @@ import { gatherInfo, isFirstCallMade, answerIsAlternatives, resetAltExists, getU
 import { sendAnswerToServer } from '../apps/quiz/sendContent'
 import { saveHighscore } from '../apps/quiz/storage'
 import { getTimeTaken, startCount } from '../apps/quiz/timer'
-import { switchView } from './windowView'
+import { Window } from './windowView'
 
 /**
  * Sets title of HTML doc, calls to create HTML elements.
@@ -29,7 +29,7 @@ function getMenu (params) {
 async function getQuiz (id, firstCall) {
   try {
     const data = await gatherInfo(firstCall)
-    switchView(id, createQuizElements(data), document.getElementById(id).firstChild.nextSibling)
+    Window.switchView(id, createQuizElements(data), document.getElementById(id).firstChild.nextSibling)
     startCount()
     return isFirstCallMade()
   } catch (error) {
@@ -51,7 +51,7 @@ async function checkAnswer (id, nickname) {
     const success = await sendAnswerToServer(getURL(), answer)
 
     if (success[0] === 'GameOver') {
-      switchView(id,
+      Window.switchView(id,
         createGeneric('GAME OVER', success[1], 'Reload page for menu', false, true),
         document.getElementById('quizQuestion'))
       return true
@@ -60,14 +60,14 @@ async function checkAnswer (id, nickname) {
     if (success[0] === 'Complete') {
       const time = getTimeTaken()
       saveHighscore([nickname, time])
-      switchView(id,
+      Window.switchView(id,
         createGeneric('QUIZ COMPLETE!', success[1], 'Reload page for menu', false, true),
         document.getElementById('quizQuestion'))
       return true
     }
 
     setNextURL(success.nextURL)
-    switchView(id,
+    Window.switchView(id,
       createGeneric('Correct!', success.message, 'Next Question', true, false),
       document.getElementById('quizQuestion'))
     return false

@@ -17,17 +17,15 @@ export class Chat {
 
   /**
    * Sets up a chat.
-   *
-   * @param {Window} window Parent
    */
-  constructor (window) {
-    this.parentWindow = window
+  constructor () {
+    this.parentWindow = new Window()
 
     this.info.username = this.checkForUsername()
     console.log(this.info)
 
     this.changeChatView()
-    this.parentWindow.addApp(this)
+    this.parentWindow.show()
   }
 
   /**
@@ -35,15 +33,17 @@ export class Chat {
    */
   changeChatView () {
     const that = this
-    this.elem = {}
+    this.elem = []
     const e = this.elem
 
     e.parent = document.createElement('div')
     e.parent.id = 'chatCont'
-
+    this.parentWindow.addApp(e.parent)
     if (!this.info.username) {
-      e.parent.appendChild(this.header(false, false))
-      e.parent.appendChild(this.chooseUsername())
+      this.appendChildrenToParent(e.parent, this.header(false, false))
+      this.appendChildrenToParent(e.parent, this.chooseUsername())
+      // e.parent.append(this.header(false, false))
+      // e.parent.append(this.chooseUsername())
       this.changeWindowParams(false)
       this.elem.usernameView.confirmBtn.addEventListener('click', function () {
         window.localStorage.setItem('chatUsername', that.info.username = that.elem.usernameView.chatUsername.value)
@@ -51,14 +51,19 @@ export class Chat {
       })
     }
     if (this.info.changeToChatView) {
-      e.parent.appendChild(this.header(true, true))
-      e.parent.appendChild(this.messageWindow())
-      e.parent.appendChild(this.messageInput())
+      this.appendChildrenToParent(e.parent, this.header(true, true))
+      this.appendChildrenToParent(e.parent, this.messageWindow())
+      this.appendChildrenToParent(e.parent, this.messageInput())
+      // e.parent.append(this.header(true, true))
+      // e.parent.append(this.messageWindow())
+      // e.parent.append(this.messageInput())
       this.changeWindowParams(false)
       connect(this.info.id)
     }
-    e.parent.appendChild(this.header(true, false))
-    e.parent.appendChild(this.chooseChannel())
+    this.appendChildrenToParent(e.parent, this.header(true, false))
+    this.appendChildrenToParent(e.parent, this.chooseChannel())
+    // e.parent.append(this.header(true, false))
+    // e.parent.append(this.chooseChannel())
     this.changeWindowParams(true)
     this.elem.channelView.confirmBtn.addEventListener('click', function () {
       that.parentWindow.switchView(that.changeChatView(), that.elem.parent)
@@ -73,7 +78,7 @@ export class Chat {
    */
   appendChildrenToParent (parent, children) {
     children.forEach(child => {
-      parent.appendChild(child)
+      parent.append(child)
     })
   }
 
@@ -88,9 +93,11 @@ export class Chat {
 
   /**
    * If username is not set in local-storage.
+   *
+   * @returns {HTMLElement[]} Object
    */
   chooseUsername () {
-    this.elem.usernameView = {}
+    this.elem.usernameView = []
     const e = this.elem.usernameView
 
     e.parent = document.createElement('div')
@@ -110,13 +117,17 @@ export class Chat {
     e.parent.appendChild(e.paragraph)
     e.parent.appendChild(e.input)
     e.parent.appendChild(e.confirmBtn)
+
+    return this.elem.usernameView
   }
 
   /**
    * Lets user select channel to write in.
+   *
+   * @returns {HTMLElement[]} Object
    */
   chooseChannel () {
-    this.elem.channelView = {}
+    this.elem.channelView = []
     const e = this.elem.channelView
 
     e.parent = document.createElement('div')
@@ -130,18 +141,21 @@ export class Chat {
     e.confirmBtn.id = 'confirmChannel'
     e.confirmBtn.textContent = 'Start chatting'
 
-    e.parent.appendChild(e.paragraph)
-    e.parent.appendChild(this.makeChannelList(['Start', '1DV525', 'Network']))
-    e.parent.appendChild(e.confirmBtn)
+    e.parent.append(e.paragraph)
+    e.parent.append(this.makeChannelList(['Start', '1DV525', 'Network']))
+    e.parent.append(e.confirmBtn)
+
+    return this.elem.channelView
   }
 
   /**
    * Creates a list of channels to choose from.
    *
    * @param {string[]} channels Channel names
+   * @returns {HTMLElement[]} Object
    */
   makeChannelList (channels) {
-    this.elem.channelList = {}
+    this.elem.channelList = []
     const e = this.elem.channelList
 
     e.parent = document.createElement('div')
@@ -162,9 +176,11 @@ export class Chat {
       e.label.setAttribute('for', e.opt.id)
       e.label.textContent = channel
 
-      e.parent.appendChild(e.opt)
-      e.parent.appendChild(e.label)
+      e.parent.append(e.opt)
+      e.parent.append(e.label)
     })
+
+    return this.elem.channelList
   }
 
   /**
@@ -172,9 +188,10 @@ export class Chat {
    *
    * @param {boolean} appendUser True or false
    * @param {boolean} appendChannel True or false
+   * @returns {HTMLElement[]} Object
    */
   header (appendUser, appendChannel) {
-    this.elem.header = {}
+    this.elem.header = []
     const e = this.elem.header
 
     e.parent = document.createElement('div')
@@ -184,31 +201,37 @@ export class Chat {
     if (appendUser) {
       e.userP = document.createElement('p')
       e.userP.textContent = this.info.username
-      e.parent.appendChild(e.userP)
+      e.parent.append(e.userP)
     }
 
     e.title = document.createElement('h3')
     e.title.textContent = 'CHAT'
-    e.parent.appendChild(e.title)
+    e.parent.append(e.title)
 
     if (appendChannel) {
       e.channelP = document.createElement('p')
       e.channelP.textContent = this.info.channel
-      e.parent.appendChild(e.channelP)
+      e.parent.append(e.channelP)
     }
 
     e.parent.classList.add('evenly')
+
+    return this.elem.header
   }
 
   /**
    * Creates window so all messages can be viewed.
+   *
+   * @returns {HTMLElement[]} Object
    */
   messageWindow () {
-    this.elem.messages = {}
+    this.elem.messages = []
     const e = this.elem.messages
 
     e.messageBox = document.createElement('ul')
     e.messageBox.id = 'messages'
+
+    return this.elem.messages
   }
 
   /**
@@ -220,14 +243,16 @@ export class Chat {
   appendMessage (windowId, object) {
     const message = document.createElement('li')
     message.textContent = object.data
-    document.getElementById(windowId).firstChild.nextSibling.firstChild.nextSibling.appendChild(message)
+    document.getElementById(windowId).firstChild.nextSibling.firstChild.nextSibling.append(message)
   }
 
   /**
    * Creates message inputfield and send button.
+   *
+   * @returns {HTMLElement[]} Object
    */
   messageInput () {
-    this.elem.messageInput = {}
+    this.elem.messageInput = []
     const e = this.elem.messageInput
 
     e.parent = document.createElement('div')
@@ -247,8 +272,10 @@ export class Chat {
       e.inputField.value = ''
     })
 
-    e.parent.appendChild(e.inputField)
-    e.parent.appendChild(e.sendBtn)
+    e.parent.append(e.inputField)
+    e.parent.append(e.sendBtn)
+
+    return this.elem.messageInput
   }
 
   /**

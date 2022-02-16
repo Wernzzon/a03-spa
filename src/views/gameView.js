@@ -9,13 +9,14 @@ let choosenLayout
  * Combines counter and layout.
  *
  * @param {Card[]} cards Deck of cards
+ * @param {string} windowId Id of window
  *
  * @returns {HTMLDivElement} Counter and layout wrapped together
  */
-function combineCounterAndLayout (cards) {
+function combineCounterAndLayout (cards, windowId) {
   const wrapper = document.createElement('div')
   wrapper.id = 'memory'
-  wrapper.appendChild(counter())
+  wrapper.appendChild(counter(windowId))
   wrapper.appendChild(bindCardsToCardHolder(cards))
 
   return wrapper
@@ -34,18 +35,18 @@ function bindCardsToCardHolder (cards) {
 /**
  * Creates a counter.
  *
+ * @param {string} windowId Id of window
  * @returns {HTMLDivElement} Container for counter
  */
-function counter () {
+function counter (windowId) {
   const countContainer = document.createElement('div')
-  countContainer.classList.add('countCont')
 
   const atmps = document.createElement('span')
   atmps.classList.add('xLarge')
   atmps.textContent = 'Attempts: '
 
   const atmpsCounter = document.createElement('span')
-  atmpsCounter.id = 'attempts'
+  atmpsCounter.id = `${windowId}-attempts`
   atmpsCounter.classList.add('xLarge')
   atmpsCounter.textContent = '0'
 
@@ -58,9 +59,10 @@ function counter () {
 /**
  * Gives all three layout options.
  *
+ * @param {string} windowId Id of window
  * @returns {HTMLDivElement} Container with options for layout
  */
-function giveOptions () {
+function giveOptions (windowId) {
   const container = document.createElement('div')
   container.id = 'overlay'
 
@@ -88,7 +90,7 @@ function giveOptions () {
   container.appendChild(inst)
   container.appendChild(choosen)
   container.appendChild(wrapper)
-  container.appendChild(confirmButton())
+  container.appendChild(confirmButton(windowId))
 
   return container
 }
@@ -118,11 +120,12 @@ function congrats (attempts) {
 /**
  * Creates a confirm button.
  *
+ * @param {string} windowId Id of window
  * @returns {HTMLButtonElement} Button
  */
-function confirmButton () {
+function confirmButton (windowId) {
   const btn = document.createElement('button')
-  btn.id = 'confirmLayout'
+  btn.id = `${windowId}-confirmLayout`
   btn.textContent = 'Confirm'
   return btn
 }

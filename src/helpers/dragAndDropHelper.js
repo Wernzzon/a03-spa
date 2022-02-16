@@ -52,15 +52,6 @@ function dragElement (elmnt) {
   }
 }
 
-/**
- * Sets all listeners for the specified id.
- *
- * @param {string} itemId Id of element
- */
-function makeElementDraggable (itemId) {
-  dragElement(document.getElementById(itemId))
-}
-
 export {
-  makeElementDraggable
+  dragElement
 }

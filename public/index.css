@@ -70,11 +70,6 @@ body {
   font-size: larger;
 }
 
-#countCont {
-  position: absolute;
-  left: 20rem;
-}
-
 .board {
   position: relative;
   left: 7.5rem;

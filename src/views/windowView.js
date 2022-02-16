@@ -1,6 +1,11 @@
 'use strict'
 
 import { Chat } from './chatView'
+import { dragElement } from '../helpers/dragAndDropHelper'
+import { Memory } from '../apps/memory/game'
+import { Settings } from '../helpers/backgroundSettings'
+import { v4 as uuidv4 } from 'uuid'
+import { Quiz } from '../apps/quiz/quizStart'
 
 /**
  * Window.
@@ -10,6 +15,7 @@ export class Window {
    * Sets up a window.
    */
   constructor () {
+    this.genUUID()
     const that = this
 
     this.createElements()
@@ -26,9 +32,25 @@ export class Window {
   }
 
   /**
+   * Generates UUID with UUID v4.
+   */
+  genUUID () {
+    this._UUID = uuidv4()
+  }
+
+  /**
+   * Get UUID.
+   *
+   * @returns {string} UUID of instance
+   */
+  get UUID () {
+    return this._UUID.toString()
+  }
+
+  /**
    * Appends application to window.
    *
-   * @param {Chat} app Application
+   * @param {Chat | Memory | Settings | Quiz} app Application
    */
   addApp (app) {
     this.elem.parent.appendChild(app)
@@ -39,6 +61,7 @@ export class Window {
    */
   show () {
     document.getElementById('desktop').appendChild(this.elem.parent)
+    dragElement(this.elem.parent)
   }
 
   /**
@@ -92,13 +115,14 @@ export class Window {
     const e = this.elem
 
     e.parent = document.createElement('div')
+    e.parent.id = this.UUID
     e.parent.classList.add('draggableWindow')
 
     e.closeBtn = document.createElement('button')
     e.closeBtn.classList.add('close')
     e.closeBtn.textContent = 'Close'
 
-    e.parent.appendChild(e.closeBtn)
+    e.parent.append(e.closeBtn)
   }
 
   /**

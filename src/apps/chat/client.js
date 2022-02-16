@@ -1,4 +1,4 @@
-import { appendMessage } from '../../views/chatView'
+import { Chat } from '../../views/chatView'
 
 const connections = new Map()
 /**
@@ -44,7 +44,7 @@ function setEvents (socket, windowId) {
     console.log(event.data)
     const parsed = JSON.parse(event.data)
     if (parsed.username !== 'The Server') {
-      appendMessage(windowId, parsed)
+      Chat.appendMessage(windowId, parsed)
     }
   }
 

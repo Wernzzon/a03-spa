@@ -7,7 +7,7 @@
  */
 function createDesktop (iconNames) {
   const dsktp = document.createElement('div')
-  dsktp.classList.add('backgroundCover')
+  dsktp.classList.add('backgroundCover', 'background2')
   dsktp.id = 'desktop'
   dsktp.appendChild(createIconMenu(iconNames))
   document.body.appendChild(dsktp)
