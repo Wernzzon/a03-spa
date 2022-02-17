@@ -19,7 +19,7 @@ function connect (windowId) {
  * @param {string} windowId Id of window
  */
 function setEvents (socket, windowId) {
-  document.getElementById(`close-${windowId}`).addEventListener('click', e => {
+  document.getElementById(windowId).firstChild.addEventListener('click', () => {
     close(windowId)
   })
   /**

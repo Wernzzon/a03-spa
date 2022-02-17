@@ -6,13 +6,14 @@ import { Window } from '../views/windowView'
  * Background settings application.
  */
 export class Settings {
+  parentWindow
   /**
    * Constructor.
    */
   constructor () {
-    const parentWindow = new Window()
-    parentWindow.addApp(this.createElements())
-    parentWindow.show()
+    this.parentWindow = new Window()
+    this.parentWindow.addApp(this.createElements())
+    this.parentWindow.show()
   }
 
   /**

@@ -39,7 +39,7 @@ export class Quiz {
       return getMenu(window.args)
     }
 
-    Window.switchView(window.id, getMenu(window.args), document.getElementById(window.id).firstChild.nextSibling)
+    this.parentWindow.switchView(getMenu(window.args), document.getElementById(window.id).firstChild.nextSibling)
   }
 
   /**

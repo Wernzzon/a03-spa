@@ -1,7 +1,6 @@
 
 // Imports
 import { createDesktop } from './views/desktopView'
-// import { Window } from './views/windowView'
 import { Memory } from './apps/memory/game'
 import { Quiz } from './apps/quiz/quizStart'
 import { Chat } from './views/chatView'
@@ -24,7 +23,7 @@ function main () {
  */
 function addEventListeners () {
   document.querySelectorAll('.menuIcon').forEach(item => {
-    item.addEventListener('click', e => {
+    item.addEventListener('click', () => {
       addApp(item.id)
     })
   })
