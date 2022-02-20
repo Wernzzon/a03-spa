@@ -3,7 +3,7 @@
 // Imports
 import { getMenu, getQuiz, checkAnswer } from '../../views/quizViews'
 import { nicknameExists } from './storage'
-import { Window } from '../../views/windowView'
+import { Window } from '../../views/window'
 
 /**
  * Quiz

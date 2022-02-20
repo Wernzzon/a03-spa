@@ -1,6 +1,6 @@
 'use strict'
 
-import { Window } from '../views/windowView'
+import { Window } from '../views/window'
 
 /**
  * Background settings application.

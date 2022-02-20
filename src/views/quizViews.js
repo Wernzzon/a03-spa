@@ -6,7 +6,7 @@ import { gatherInfo, isFirstCallMade, answerIsAlternatives, resetAltExists, getU
 import { sendAnswerToServer } from '../apps/quiz/sendContent'
 import { saveHighscore } from '../apps/quiz/storage'
 import { getTimeTaken, startCount } from '../apps/quiz/timer'
-import { Window } from './windowView'
+import { Window } from './window'
 
 /**
  * Sets title of HTML doc, calls to create HTML elements.

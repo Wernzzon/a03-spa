@@ -1,9 +1,12 @@
 'use strict'
 
+// Imports
+import { Window } from '../views/window'
+
 /**
  * Makes an element draggable.
  *
- * @param {HTMLDivElement} elmnt Element to be draggable
+ * @param {Window} elmnt Element to be draggable
  */
 function dragElement (elmnt) {
   let pos1 = 0; let pos2 = 0; let pos3 = 0; let pos4 = 0

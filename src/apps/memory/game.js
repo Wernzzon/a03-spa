@@ -2,7 +2,7 @@
 
 // Imports
 import { Deck } from './deck'
-import { Window } from '../../views/windowView'
+import { Window } from '../../views/window'
 import { getLayoutOption, giveOptions, combineCounterAndLayout, congrats } from '../../views/gameView'
 import { Card } from './card'
 

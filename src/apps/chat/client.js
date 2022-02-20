@@ -1,111 +1,128 @@
-import { Chat } from '../../views/chatView'
-
-const connections = new Map()
-/**
- * Connects to websocket and logs when open.
- *
- * @param {string} windowId Id of window
- */
-function connect (windowId) {
-  const socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
-  setEvents(socket, windowId)
-  connections.set(windowId, socket)
-}
+'use strict'
 
 /**
- * Sets events for WebSocket.
- *
- * @param {WebSocket} socket WebSocket
- * @param {string} windowId Id of window
+ * Client for chat
  */
-function setEvents (socket, windowId) {
-  document.getElementById(windowId).firstChild.addEventListener('click', () => {
-    close(windowId)
-  })
-  /**
-   * Log when connection is open.
-   */
-  socket.onopen = function () {
-    console.log('Websocket now open')
-  }
-  /**
-   * Log when connection is closed.
-   */
-  socket.onclose = function () {
-    console.log('Connection closed')
-  }
+export class Client {
+  socket
+  latestMessage
 
   /**
-   * Log when connection recevied a message.
+   * Constructor.
    *
-   * @param {Event} event event
+   * @param {string} windowId Id of window
    */
-  socket.onmessage = function (event) {
-    console.log(event.data)
-    const parsed = JSON.parse(event.data)
-    if (parsed.username !== 'The Server') {
-      Chat.appendMessage(windowId, parsed)
+  constructor (windowId) {
+    const that = this
+
+    this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
+    this.setEvents()
+
+    document.getElementById(windowId).firstChild.addEventListener('click', () => {
+      that.closeSocket(windowId)
+    })
+  }
+
+  /**
+   * Sets events for WebSocket.
+   */
+  setEvents () {
+    const that = this
+    /**
+     * Log when connection is open.
+     */
+    this.socket.onopen = function () {
+      console.log('Websocket now open')
+    }
+    /**
+     * Log when connection is closed.
+     */
+    this.socket.onclose = function () {
+      console.log('Connection closed')
+    }
+
+    /**
+     * Log when connection recevied a message.
+     *
+     * @param {Event} event event
+     */
+    this.socket.onmessage = function (event) {
+      console.log(event.data)
+      const parsedData = JSON.parse(event.data)
+      if (parsedData.username !== 'The Server') {
+        that.setLatestMessage(parsedData)
+      }
+    }
+
+    /**
+     * Log when connection has an error.
+     *
+     * @param {Event} event event
+     */
+    this.socket.onerror = function (event) {
+      console.error(event.data)
     }
   }
 
   /**
-   * Log when connection has an error.
+   * Close connection associated with the windowId.
    *
-   * @param {Event} event event
+   * @returns {false | void} False if bufferedAmount is not 0
    */
-  socket.onerror = function (event) {
-    console.error(event.data)
+  closeSocket () {
+    if (this.socket.bufferedAmount !== 0) return false
+
+    return this.socket.close()
   }
-}
 
-/**
- * Close connection associated with the windowId.
- *
- * @param {string} windowId Id of window
- * @returns {boolean} True or false
- */
-function close (windowId) {
-  if (connections.get(windowId).bufferedAmount !== 0) return false
-
-  return connections.get(windowId).close()
-}
-
-/**
- * Sends message in JSON format.
- *
- * @param {JSON} data JSON data to be sent
- * @param {string} windowId Index of connection
- */
-function send (data, windowId) {
-  connections.get(windowId).send(data)
-}
-
-/**
- * Receives message in JSON format.
- */
-// eslint-disable-next-line no-unused-vars
-function receive () {
-
-}
-
-/**
- * Constructs message into JSON, calls send.
- *
- * @param {string} windowId Index of connection
- * @param {string[]} params [data, username, channel]
- */
-function constructMsg (windowId, params) {
-  const msg = {
-    type: 'message',
-    data: params[0],
-    username: params[1],
-    channel: params[2],
-    key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+  /**
+   * Sends message in JSON format.
+   *
+   * @param {JSON} data JSON data to be sent
+   */
+  sendMsg (data) {
+    this.socket.send(data)
   }
-  send(JSON.stringify(msg), windowId)
-}
 
-export {
-  connect,
-  constructMsg
+  /**
+   * Receives message in JSON format.
+   */
+  // eslint-disable-next-line no-unused-vars
+  receive () {
+
+  }
+
+  /**
+   * Constructs message into JSON, calls send.
+   *
+   * @param {string[]} params [data, username, channel]
+   */
+  constructMsg (params) {
+    const msg = {
+      type: 'message',
+      data: params[0],
+      username: params[1],
+      channel: params[2],
+      key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+    }
+    this.sendMsg(JSON.stringify(msg))
+  }
+
+  /**
+   * Set the message to be appended to chat.
+   *
+   * @param {object} data Message
+   */
+  setLatestMessage (data) {
+    this.latestMessage = data
+  }
+
+  /**
+   * Get the message to be appended to chat.
+   *
+   * @returns {object} Message
+   */
+  getLatestMessage () {
+    return this.latestMessage
+  }
 }
