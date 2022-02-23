@@ -212,15 +212,12 @@ export class Chat {
    * Appends message to message container.
    *
    * @param {string[]} msg Message
+   * @returns {HTMLLIElement} Message
    */
   appendMessage (msg) {
     const message = document.createElement('li')
     message.textContent = `${msg[0]}:\t${msg[1]}`
-    document.querySelectorAll(`#messages-${this.info.chosenChannel}`).forEach(item => {
-      if (item.parentElement.parentElement.id === this.parentWindow.UUID) {
-        item.appendChild(message)
-      }
-    })
+    return message
   }
 
   /**
@@ -248,7 +245,7 @@ export class Chat {
     e.sendBtn.addEventListener('click', function () {
       that.client.constructMsg(that.elem.messageInput.inputField.value)
       if (document.querySelectorAll(`#messages-${that.info.chosenChannel}`).length === 1) {
-        that.appendMessage([that.info.username, that.elem.messageInput.inputField.value])
+        that.elem.messages.messageBox.appendChild(that.appendMessage([that.info.username, that.elem.messageInput.inputField.value]))
       }
       that.elem.messageInput.inputField.value = ''
     })
