@@ -24,9 +24,9 @@ export class Window {
       that.close()
     }, false)
 
-    // this.elem.parent.addEventListener('mousedown', function () {
-    //   that.gainFocus()
-    // }, false)
+    this.elem.parent.addEventListener('mousedown', function () {
+      that.gainFocus(that)
+    }, false)
 
     this.setZIndex(1)
   }
@@ -100,7 +100,7 @@ export class Window {
    * @returns {number} Z-index-property, 0 if not present.
    */
   getZIndex () {
-    return this.elem.parent.style.zIndex
+    return parseInt(this.elem.parent.style.zIndex) || 0
   }
 
   /**
@@ -123,8 +123,10 @@ export class Window {
 
   /**
    * Makes the calling window the topmost window.
+   *
+   * @param {Window} that Instance of window
    */
-  gainFocus () {
-    this.ZIndex++
+  gainFocus (that) {
+    this.setZIndex(that.getZIndex() + 1)
   }
 }

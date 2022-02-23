@@ -5,21 +5,27 @@
  */
 export class Client {
   socket
-  latestMessage
+  chatInfo = {
+    user: '',
+    channel: '',
+    id: ''
+  }
 
   /**
    * Constructor.
    *
-   * @param {string} windowId Id of window
+   * @param {string[]} info Username, channel, windowId
    */
-  constructor (windowId) {
+  constructor (info) {
     const that = this
-
+    this.chatInfo.user = info[0]
+    this.chatInfo.channel = info[1]
+    this.chatInfo.id = info[2]
     this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
     this.setEvents()
 
-    document.getElementById(windowId).firstChild.addEventListener('click', () => {
-      that.closeSocket(windowId)
+    document.getElementById(this.chatInfo.id).firstChild.addEventListener('click', () => {
+      that.closeSocket(that.chatInfo.id)
     })
   }
 
@@ -47,11 +53,9 @@ export class Client {
      * @param {Event} event event
      */
     this.socket.onmessage = function (event) {
-      console.log(event.data)
       const parsedData = JSON.parse(event.data)
-      if (parsedData.username !== 'The Server') {
-        that.setLatestMessage(parsedData)
-      }
+      if (parsedData.type === 'notification' || parsedData.type === 'heartbeat') return
+      that.receive(parsedData)
     }
 
     /**
@@ -86,43 +90,32 @@ export class Client {
 
   /**
    * Receives message in JSON format.
+   *
+   * @param {object} parsedData data
    */
-  // eslint-disable-next-line no-unused-vars
-  receive () {
-
+  receive (parsedData) {
+    const message = document.createElement('li')
+    message.textContent = `${parsedData.username}:\t${parsedData.data}`
+    document.querySelectorAll(`#messages-${this.chatInfo.channel}`).forEach(item => {
+      if (item.parentElement.parentElement.id !== this.chatInfo.id) {
+        item.appendChild(message)
+      }
+    })
   }
 
   /**
    * Constructs message into JSON, calls send.
    *
-   * @param {string[]} params [data, username, channel]
+   * @param {string} msg data
    */
-  constructMsg (params) {
-    const msg = {
+  constructMsg (msg) {
+    const toJSON = {
       type: 'message',
-      data: params[0],
-      username: params[1],
-      channel: params[2],
+      data: msg,
+      username: this.chatInfo.user,
+      channel: this.chatInfo.channel,
       key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
     }
-    this.sendMsg(JSON.stringify(msg))
-  }
-
-  /**
-   * Set the message to be appended to chat.
-   *
-   * @param {object} data Message
-   */
-  setLatestMessage (data) {
-    this.latestMessage = data
-  }
-
-  /**
-   * Get the message to be appended to chat.
-   *
-   * @returns {object} Message
-   */
-  getLatestMessage () {
-    return this.latestMessage
+    this.sendMsg(JSON.stringify(toJSON))
   }
 }

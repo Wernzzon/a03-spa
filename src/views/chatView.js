@@ -52,7 +52,8 @@ export class Chat {
       e.parent.appendChild(this.header(true, true))
       e.parent.appendChild(this.messageWindow())
       e.parent.appendChild(this.messageInput())
-      this.client = new Client(this.parentWindow.UUID)
+      this.client = new Client(
+        [this.info.username, this.info.chosenChannel, this.parentWindow.UUID])
       return e.parent
     }
     e.parent.appendChild(this.header(true, false))
@@ -202,7 +203,7 @@ export class Chat {
     const e = this.elem.messages
 
     e.messageBox = document.createElement('ul')
-    e.messageBox.id = 'messages'
+    e.messageBox.id = `messages-${this.info.chosenChannel}`
 
     return e.messageBox
   }
@@ -215,7 +216,11 @@ export class Chat {
   appendMessage (msg) {
     const message = document.createElement('li')
     message.textContent = `${msg[0]}:\t${msg[1]}`
-    this.elem.messages.messageBox.appendChild(message)
+    document.querySelectorAll(`#messages-${this.info.chosenChannel}`).forEach(item => {
+      if (item.parentElement.parentElement.id === this.parentWindow.UUID) {
+        item.appendChild(message)
+      }
+    })
   }
 
   /**
@@ -230,23 +235,21 @@ export class Chat {
 
     e.parent = document.createElement('div')
     e.parent.id = 'messageInput'
+    e.parent.classList.add('evenly')
 
     e.inputField = document.createElement('textarea')
     e.inputField.rows = '2'
     e.inputField.cols = '70'
-    e.inputField.name = 'messageField'
 
     e.sendBtn = document.createElement('button')
     e.sendBtn.type = 'button'
     e.sendBtn.textContent = 'Send'
     e.sendBtn.id = 'sendMsg'
     e.sendBtn.addEventListener('click', function () {
-      that.client.constructMsg(
-        [that.elem.messageInput.inputField.value,
-          that.info.username,
-          that.info.channel
-        ])
-      that.appendMessage([that.info.username, e.inputField.value])
+      that.client.constructMsg(that.elem.messageInput.inputField.value)
+      if (document.querySelectorAll(`#messages-${that.info.chosenChannel}`).length === 1) {
+        that.appendMessage([that.info.username, that.elem.messageInput.inputField.value])
+      }
       that.elem.messageInput.inputField.value = ''
     })
 
