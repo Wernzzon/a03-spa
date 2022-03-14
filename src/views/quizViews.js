@@ -2,7 +2,7 @@
 
 // Imports
 import { createMenuElements, createQuizElements, createGeneric, getCheckedButton } from './createQuizViews'
-import { gatherInfo, isFirstCallMade, answerIsAlternatives, resetAltExists, getURL, setNextURL } from '../apps/quiz/updateContent'
+import { gatherInfo, answerIsAlternatives, resetAltExists, getURL, setNextURL } from '../apps/quiz/updateContent'
 import { sendAnswerToServer } from '../apps/quiz/sendContent'
 import { saveHighscore } from '../apps/quiz/storage'
 import { getTimeTaken, startCount } from '../apps/quiz/timer'
@@ -21,17 +21,15 @@ function getMenu (params) {
 /**
  * Gets info for quiz question, calls to create HTML elements.
  *
- * @param {string} id Id of current window
- * @param {boolean} firstCall True if it is the first time it is pass through else false
- *
- * @returns {boolean} Returns true
+ * @returns {HTMLDivElement} Returns true
  */
-async function getQuiz (id, firstCall) {
+async function getQuiz () {
   try {
-    const data = await gatherInfo(firstCall)
-    Window.switchView(id, createQuizElements(data), document.getElementById(id).firstChild.nextSibling)
-    startCount()
-    return isFirstCallMade()
+    const data = gatherInfo() // await needed?
+    // const cont = createQuizElements(data)
+    // Window.switchView(id, createQuizElements(data), document.getElementById(id).firstChild.nextSibling)
+    // startCount()
+    return createQuizElements(data)
   } catch (error) {
     console.log(error)
   }
@@ -93,5 +91,6 @@ function getAnswerFromUser () {
 export {
   getMenu,
   getQuiz,
-  checkAnswer
+  checkAnswer,
+  startCount
 }

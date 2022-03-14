@@ -45,9 +45,9 @@ function addApp (appName) {
   }
   if (appName === apps[2]) {
     return new Chat()
-    // chatWindow(`${appName}${num}`)setListener()
   }
   if (appName === apps[3]) {
     return new Memory()
+    // TODO: Keyboard controls
   }
 }

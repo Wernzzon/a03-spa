@@ -3,32 +3,25 @@
 // Imports
 import { getFirstQuestion, getQuestion } from './quiz'
 
-let firstCallMade = false
-let altExists = false
-let nextURL
+const info = {
+  firstCall: true,
+  altExists: false,
+  nextURL: ''
+}
 
 /**
  * Get first question if firstCall is true, else get next question in quiz.
  *
- * @param {boolean} firstCall True if it is the first time it is pass through else false
- *
  * @returns {Array} Data from server
  */
-async function gatherInfo (firstCall) {
+async function gatherInfo () {
   try {
-    let response
-    if (firstCall === true) {
-      response = await getFirstQuestion()
-      firstCallMade = true
-    } else {
-      response = await getQuestion(nextURL)
-    }
+    const response = info.firstCall ? await getFirstQuestion() : await getQuestion(info.nextURL)
+    if (info.firstCall) info.firstCall = false
 
     const data = await response.json()
-    nextURL = data.nextURL
-    if (data.alternatives !== undefined) {
-      altExists = true
-    }
+    info.nextURL = data.nextURL
+    if (data.alternatives) info.altExists = true
 
     return data
   } catch (error) {
@@ -37,28 +30,19 @@ async function gatherInfo (firstCall) {
 }
 
 /**
- * Send back true if first call has been made.
- *
- * @returns {boolean} True or false
- */
-function isFirstCallMade () {
-  return firstCallMade
-}
-
-/**
  * Send back true if answer input is in form of radio buttons, else false.
  *
  * @returns {boolean} True or false
  */
 function answerIsAlternatives () {
-  return altExists
+  return info.altExists
 }
 
 /**
  * Resets altExists to false if it has been true.
  */
 function resetAltExists () {
-  altExists = false
+  info.altExists = false
 }
 
 /**
@@ -67,7 +51,7 @@ function resetAltExists () {
  * @returns {string} Next URL to make a call to
  */
 function getURL () {
-  return nextURL
+  return info.nextURL
 }
 
 /**
@@ -76,12 +60,11 @@ function getURL () {
  * @param {string} url Next URL to make a call to
  */
 function setNextURL (url) {
-  nextURL = url
+  info.nextURL = url
 }
 
 export {
   gatherInfo,
-  isFirstCallMade,
   answerIsAlternatives,
   resetAltExists,
   getURL,
