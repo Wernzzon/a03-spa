@@ -63,10 +63,20 @@ function setNextURL (url) {
   info.nextURL = url
 }
 
+/**
+ * Resets info for pulling correct content.
+ */
+function resetInfo () {
+  info.firstCall = true
+  info.altExists = false
+  info.nextURL = ''
+}
+
 export {
   gatherInfo,
   answerIsAlternatives,
   resetAltExists,
   getURL,
-  setNextURL
+  setNextURL,
+  resetInfo
 }

@@ -2,11 +2,10 @@
 
 // Imports
 import { createMenuElements, createQuizElements, createGeneric, getCheckedButton } from './createQuizViews'
-import { gatherInfo, answerIsAlternatives, resetAltExists, getURL, setNextURL } from '../apps/quiz/updateContent'
+import { gatherInfo, answerIsAlternatives, resetAltExists, getURL, setNextURL, resetInfo } from '../apps/quiz/updateContent'
 import { sendAnswerToServer } from '../apps/quiz/sendContent'
 import { saveHighscore } from '../apps/quiz/storage'
 import { getTimeTaken, startCount } from '../apps/quiz/timer'
-import { Window } from './window'
 
 /**
  * Sets title of HTML doc, calls to create HTML elements.
@@ -21,54 +20,42 @@ function getMenu (params) {
 /**
  * Gets info for quiz question, calls to create HTML elements.
  *
- * @returns {HTMLDivElement} Returns true
+ * @param {number} questionNum Number of the question
+ * @returns {HTMLDivElement} Returns quiz elements
  */
-async function getQuiz () {
+async function getQuiz (questionNum) {
   try {
-    const data = gatherInfo() // await needed?
-    // const cont = createQuizElements(data)
-    // Window.switchView(id, createQuizElements(data), document.getElementById(id).firstChild.nextSibling)
-    // startCount()
-    return createQuizElements(data)
-  } catch (error) {
-    console.log(error)
+    const data = await gatherInfo() // await needed?
+    return createQuizElements(data, questionNum)
+  } catch (err) {
+    console.error(err)
   }
 }
 
 /**
  * Checks if answer is correct or false.
  *
- * @param {string} id Id of current window
+ * @param {string} id Id of window
  * @param {string} nickname To be stored
- *
  * @returns {boolean} True or false
  */
 async function checkAnswer (id, nickname) {
   try {
-    const answer = getAnswerFromUser()
+    const answer = getAnswerFromUser(id)
     const success = await sendAnswerToServer(getURL(), answer)
 
     if (success[0] === 'GameOver') {
-      Window.switchView(id,
-        createGeneric('GAME OVER', success[1], 'Reload page for menu', false, true),
-        document.getElementById('quizQuestion'))
-      return true
+      return [true, createGeneric('GAME OVER', success[1], 'Click for menu', true)]
     }
 
     if (success[0] === 'Complete') {
       const time = getTimeTaken()
       saveHighscore([nickname, time])
-      Window.switchView(id,
-        createGeneric('QUIZ COMPLETE!', success[1], 'Reload page for menu', false, true),
-        document.getElementById('quizQuestion'))
-      return true
+      return [true, createGeneric('QUIZ COMPLETE!', success[1], 'Click for menu', true)]
     }
 
     setNextURL(success.nextURL)
-    Window.switchView(id,
-      createGeneric('Correct!', success.message, 'Next Question', true, false),
-      document.getElementById('quizQuestion'))
-    return false
+    return [false, createGeneric('Correct!', success.message, 'Next Question', false)]
   } catch (error) {
     console.log(error)
   }
@@ -77,12 +64,13 @@ async function checkAnswer (id, nickname) {
 /**
  * Checks if input for answer is in form of text or radio buttons.
  *
+ * @param {string} id Id of window
  * @returns {string} Returns users answer
  */
-function getAnswerFromUser () {
+function getAnswerFromUser (id) {
   const userAnswer = answerIsAlternatives()
     ? getCheckedButton()
-    : document.getElementById('answer').value
+    : document.getElementById(id).lastChild.lastChild.firstChild.value
   resetAltExists()
 
   return userAnswer
@@ -92,5 +80,6 @@ export {
   getMenu,
   getQuiz,
   checkAnswer,
-  startCount
+  startCount,
+  resetInfo
 }

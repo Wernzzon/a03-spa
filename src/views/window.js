@@ -1,11 +1,12 @@
 'use strict'
 
+// Imports
 import { Chat } from './chatView'
-import { dragElement } from '../helpers/dragAndDropHelper'
+import { Quiz } from '../apps/quiz/quizStart'
 import { Memory } from '../apps/memory/game'
 import { Settings } from '../helpers/backgroundSettings'
+import { dragElement } from '../helpers/dragAndDropHelper'
 import { v4 as uuidv4 } from 'uuid'
-import { Quiz } from '../apps/quiz/quizStart'
 
 /**
  * Window.
@@ -54,6 +55,13 @@ export class Window {
    */
   addApp (app) {
     this.elem.parent.appendChild(app)
+  }
+
+  /**
+   * Removes application from window.
+   */
+  removeApp () {
+    this.elem.parent.lastChild.remove()
   }
 
   /**

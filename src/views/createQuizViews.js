@@ -4,7 +4,6 @@
 import { timerElements } from '../apps/quiz/timer'
 import { getTopFiveTimes } from '../apps/quiz/storage'
 
-let counter = 1
 let checkedButton
 
 /**
@@ -55,17 +54,18 @@ function createMenuElements (params) {
 /**
  * Creates HTML elements for the quiz question, and appends them to be visible.
  *
- * @param {object} params Data from server to be showed for user.
+ * @param {object} params Data from server to be showed for user
+ * @param {number} counter Number of question
  *
  * @returns {HTMLDivElement} Container
  */
-function createQuizElements (params) {
+function createQuizElements (params, counter) {
   const container = document.createElement('div')
   container.id = 'quizQuestion'
 
   const numOfQuestion = document.createElement('p')
   numOfQuestion.id = 'numOfQuestion'
-  numOfQuestion.textContent = 'Question ' + counter++
+  numOfQuestion.textContent = 'Question ' + counter
 
   const question = document.createElement('p')
   question.id = 'question'
@@ -125,12 +125,11 @@ function createQuizElements (params) {
  * @param {string} h1Text Text for h1 tag
  * @param {string} serverMsg Message from server to be shown
  * @param {string} reloadOrNext Reload or next question text
- * @param {boolean} id Either add id on action or not
  * @param {boolean} score Either append highscore list or not
  *
  * @returns {HTMLDivElement} Generic container-div
  */
-function createGeneric (h1Text, serverMsg, reloadOrNext, id, score) {
+function createGeneric (h1Text, serverMsg, reloadOrNext, score) {
   const container = document.createElement('div')
 
   const h1 = document.createElement('h1')
@@ -144,7 +143,6 @@ function createGeneric (h1Text, serverMsg, reloadOrNext, id, score) {
   const action = document.createElement('p')
   action.classList.add('large')
   action.textContent = reloadOrNext
-  if (id) action.id = 'next'
 
   container.append(h1)
   container.append(message)
@@ -238,7 +236,7 @@ function alert (msg) {
  */
 function createSubmitButton () {
   const submit = document.createElement('button')
-  submit.type = 'submit'
+  submit.type = 'button'
   submit.textContent = 'Send Answer'
   submit.id = 'sendAnswer'
 
