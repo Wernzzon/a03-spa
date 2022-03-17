@@ -80,7 +80,7 @@ function giveOptions (windowId) {
     const btn = document.createElement('button')
     btn.id = options.indexOf(value)
     btn.textContent = value
-    btn.addEventListener('click', e => {
+    btn.addEventListener('click', () => {
       choosenLayout = btn.textContent
       choosen.textContent = choosenLayout
     })
