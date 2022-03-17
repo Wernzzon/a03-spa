@@ -44,7 +44,7 @@ export class Chat {
       e.parent.appendChild(this.chooseUsername())
       this.elem.usernameView.confirmUser.addEventListener('click', () => {
         window.localStorage.setItem('chatUsername', that.info.username = that.elem.usernameView.input.value)
-        that.parentWindow.switchView(that.changeChatView(), document.getElementById(that.parentWindow.UUID).firstChild.nextSibling)
+        that.parentWindow.switchView(that.changeChatView(), document.getElementById(that.parentWindow.UUID).lastChild)
       })
       return e.parent
     }
@@ -59,7 +59,7 @@ export class Chat {
     e.parent.appendChild(this.header(true, false))
     e.parent.appendChild(this.chooseChannel())
     this.elem.channelView.confirmBtn.addEventListener('click', () => {
-      that.parentWindow.switchView(that.changeChatView(), document.getElementById(that.parentWindow.UUID).firstChild.nextSibling)
+      that.parentWindow.switchView(that.changeChatView(), document.getElementById(that.parentWindow.UUID).lastChild)
     })
     return e.parent
   }
@@ -165,6 +165,7 @@ export class Chat {
    * @returns {HTMLDivElement} Object
    */
   header (appendUser, appendChannel) {
+    const that = this
     this.elem.header = {}
     const e = this.elem.header
 
@@ -175,6 +176,23 @@ export class Chat {
     if (appendUser) {
       e.userP = document.createElement('p')
       e.userP.textContent = this.info.username
+      /**
+       * Gives the option to change username.
+       */
+      e.userP.onclick = function () {
+        e.change = document.createElement('button')
+        e.change.textContent = 'Change username'
+        /**
+         * Remove username, go back to username selection.
+         */
+        e.change.onclick = function () {
+          that.removeUsername()
+          e.inst = document.createElement('span')
+          e.inst.textContent = 'Close the app and open it again.'
+          e.parent.appendChild(e.inst)
+        }
+        e.parent.appendChild(e.change)
+      }
       e.parent.appendChild(e.userP)
     }
 
@@ -263,5 +281,15 @@ export class Chat {
    */
   checkForUsername () {
     return window.localStorage.getItem('chatUsername')
+  }
+
+  /**
+   * Removes username in localstorage.
+   *
+   * @returns {null} Removal returns null, if not, operation failed
+   */
+  removeUsername () {
+    window.localStorage.removeItem('chatUsername')
+    return this.checkForUsername()
   }
 }
