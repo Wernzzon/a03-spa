@@ -2,7 +2,7 @@
 
 // Imports
 import { timerElements } from '../apps/quiz/timer'
-import { getTopFiveTimes } from '../apps/quiz/storage'
+import { getTopFiveTimes } from '../helpers/storage'
 
 let checkedButton
 
@@ -169,7 +169,7 @@ function createHighscore () {
   wrapper.append(scoreTitle)
 
   const topFive = getTopFiveTimes()
-  if (topFive !== false) {
+  if (topFive) {
     wrapper.append(makeTable(topFive))
   } else {
     const noScore = document.createElement('p')

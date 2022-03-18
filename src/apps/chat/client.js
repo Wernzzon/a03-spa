@@ -1,5 +1,8 @@
 'use strict'
 
+// Imports
+import { saveValues, getFormattedValues } from '../../helpers/storage'
+
 /**
  * Client for chat
  */
@@ -39,6 +42,7 @@ export class Client {
      */
     this.socket.onopen = function () {
       console.log('Websocket now open')
+      that.getSavedMessages()
     }
     /**
      * Log when connection is closed.
@@ -55,7 +59,8 @@ export class Client {
     this.socket.onmessage = function (event) {
       const parsedData = JSON.parse(event.data)
       if (parsedData.type === 'notification' || parsedData.type === 'heartbeat') return
-      that.receive(parsedData)
+      that.receive([parsedData.username, parsedData.data], true)
+      that.saveToStorage(parsedData)
     }
 
     /**
@@ -89,15 +94,21 @@ export class Client {
   }
 
   /**
-   * Receives message in JSON format.
+   * Handles incoming and cached messages.
    *
-   * @param {object} parsedData data
+   * @param {Array} parsedData data
+   * @param {boolean} skipSameId True or false
    */
-  receive (parsedData) {
+  receive (parsedData, skipSameId) {
     const message = document.createElement('li')
-    message.textContent = `${parsedData.username}:\t${parsedData.data}`
+    message.textContent = `${parsedData[0]}:\t${parsedData[1]}`
     document.querySelectorAll(`#messages-${this.chatInfo.channel}`).forEach(item => {
-      if (item.parentElement.parentElement.id !== this.chatInfo.id) {
+      if (skipSameId) {
+        if (item.parentElement.parentElement.id !== this.chatInfo.id) {
+          item.appendChild(message)
+        }
+      }
+      if (!skipSameId) {
         item.appendChild(message)
       }
     })
@@ -117,5 +128,28 @@ export class Client {
       key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
     }
     this.sendMsg(JSON.stringify(toJSON))
+  }
+
+  /**
+   * Cache message history.
+   *
+   * @param {object} parsedData data
+   */
+  saveToStorage (parsedData) {
+    const toSave = [
+      parsedData.username,
+      parsedData.data
+    ]
+    saveValues(parsedData.channel, toSave)
+  }
+
+  /**
+   * Get saved message history.
+   */
+  getSavedMessages () {
+    const archive = getFormattedValues(this.chatInfo.channel, false)
+    archive.forEach(arr => {
+      this.receive(arr, false)
+    })
   }
 }

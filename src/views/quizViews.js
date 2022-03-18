@@ -4,7 +4,7 @@
 import { createMenuElements, createQuizElements, createGeneric, getCheckedButton } from './createQuizViews'
 import { gatherInfo, answerIsAlternatives, resetAltExists, getURL, setNextURL, resetInfo } from '../apps/quiz/updateContent'
 import { sendAnswerToServer } from '../apps/quiz/sendContent'
-import { saveHighscore } from '../apps/quiz/storage'
+import { saveValues } from '../helpers/storage'
 import { getTimeTaken, startCount } from '../apps/quiz/timer'
 
 /**
@@ -50,7 +50,7 @@ async function checkAnswer (id, nickname) {
 
     if (success[0] === 'Complete') {
       const time = getTimeTaken()
-      saveHighscore([nickname, time])
+      saveValues('highscores', [nickname, time])
       return [true, createGeneric('QUIZ COMPLETE!', success[1], 'Click for menu', true)]
     }
 

@@ -1,6 +1,7 @@
 'use strict'
 
 // Imports
+import { getLocalValues, removeLocalValues } from '../helpers/storage'
 import { Client } from '../apps/chat/client'
 import { Window } from './window'
 
@@ -20,7 +21,7 @@ export class Chat {
    */
   constructor () {
     this.parentWindow = new Window()
-    this.info.username = this.checkForUsername()
+    this.info.username = getLocalValues('chatUsername')
 
     this.parentWindow.addApp(this.changeChatView())
     this.parentWindow.show()
@@ -165,7 +166,6 @@ export class Chat {
    * @returns {HTMLDivElement} Object
    */
   header (appendUser, appendChannel) {
-    const that = this
     this.elem.header = {}
     const e = this.elem.header
 
@@ -186,7 +186,7 @@ export class Chat {
          * Remove username, go back to username selection.
          */
         e.change.onclick = function () {
-          that.removeUsername()
+          removeLocalValues('chatUsername')
           e.inst = document.createElement('span')
           e.inst.textContent = 'Close the app and open it again.'
           e.parent.appendChild(e.inst)
@@ -272,24 +272,5 @@ export class Chat {
     e.parent.appendChild(e.sendBtn)
 
     return e.parent
-  }
-
-  /**
-   * Checks for username in localstorage.
-   *
-   * @returns {string | null} Username or null
-   */
-  checkForUsername () {
-    return window.localStorage.getItem('chatUsername')
-  }
-
-  /**
-   * Removes username in localstorage.
-   *
-   * @returns {null} Removal returns null, if not, operation failed
-   */
-  removeUsername () {
-    window.localStorage.removeItem('chatUsername')
-    return this.checkForUsername()
   }
 }

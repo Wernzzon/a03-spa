@@ -2,7 +2,7 @@
 
 // Imports
 import { getMenu, getQuiz, checkAnswer, startCount, resetInfo } from '../../views/quizViews'
-import { nicknameExists } from './storage'
+import { valueExists } from '../../helpers/storage'
 import { Window } from '../../views/window'
 
 /**
@@ -92,7 +92,7 @@ export class Quiz {
     }
 
     if (chosenNickname) {
-      if (nicknameExists(chosenNickname)) {
+      if (valueExists(chosenNickname)) {
         res[0] = false
         res[1] = 'Nickname already exists'
         return res

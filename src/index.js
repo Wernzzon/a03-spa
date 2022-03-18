@@ -41,13 +41,13 @@ function addApp (appName) {
   }
   if (appName === apps[1]) {
     return new Quiz()
-    // loadMenu(`${appName}${num}`) setNewGameListener()
+    // FIXME: Some funky behavior
   }
   if (appName === apps[2]) {
     return new Chat()
   }
   if (appName === apps[3]) {
     return new Memory()
-    // TODO: Keyboard controls
+    // TODO: Timer
   }
 }
