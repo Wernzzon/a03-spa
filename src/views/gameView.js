@@ -40,6 +40,7 @@ function bindCardsToCardHolder (cards) {
  */
 function counter (windowId) {
   const countContainer = document.createElement('div')
+  countContainer.classList.add('row', 'evenly')
 
   const atmps = document.createElement('span')
   atmps.classList.add('xLarge')
@@ -50,8 +51,19 @@ function counter (windowId) {
   atmpsCounter.classList.add('xLarge')
   atmpsCounter.textContent = '0'
 
+  const time = document.createElement('span')
+  time.classList.add('xLarge')
+  time.textContent = 'Timer: '
+
+  const timer = document.createElement('span')
+  timer.classList.add('xLarge')
+  timer.id = `${windowId}-timer`
+  timer.textContent = '0'
+
   countContainer.appendChild(atmps)
   countContainer.appendChild(atmpsCounter)
+  countContainer.appendChild(time)
+  countContainer.appendChild(timer)
 
   return countContainer
 }
@@ -99,9 +111,10 @@ function giveOptions (windowId) {
  * Congratulations overlay.
  *
  * @param {number} attempts Number of moves made by user
+ * @param {number} timeCount Time of completion
  * @returns {HTMLDivElement} Div
  */
-function congrats (attempts) {
+function congrats (attempts, timeCount) {
   const tmp = document.createElement('div')
   tmp.classList.add('xLarge', 'centerText')
 
@@ -111,8 +124,12 @@ function congrats (attempts) {
   const movesMade = document.createElement('p')
   movesMade.textContent = `You made ${attempts} moves!`
 
+  const inTime = document.createElement('p')
+  inTime.textContent = `You took ${timeCount} seconds!`
+
   tmp.appendChild(title)
   tmp.appendChild(movesMade)
+  tmp.appendChild(inTime)
 
   return tmp
 }

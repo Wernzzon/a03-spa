@@ -42,6 +42,10 @@ export class Memory {
   lockboard = false
   thisWindowId
   attempts = 0
+  timer = {
+    id: '',
+    count: 0
+  }
 
   /**
    * Constructor.
@@ -163,7 +167,8 @@ export class Memory {
    */
   gameOver (deck) {
     if (this.matchedCards.length === deck.getDeck().length) {
-      this.parentWindow.switchView(congrats(this.attempts), document.getElementById(this.parentWindow.UUID).firstChild.nextSibling)
+      this.stopTimer()
+      this.parentWindow.switchView(congrats(this.attempts, this.timer.count), document.getElementById(this.parentWindow.UUID).firstChild.nextSibling)
 
       return true
     }
@@ -245,10 +250,11 @@ export class Memory {
   setSwitchEvent () {
     document.getElementById(`${this.parentWindow.UUID}-confirmLayout`).addEventListener('click', () => {
       const deck = new Deck()
-      this.parentWindow.switchView(this.startGame(deck), document.getElementById(this.parentWindow.UUID).firstChild.nextSibling)
+      this.parentWindow.switchView(this.startGame(deck), document.getElementById(this.parentWindow.UUID).lastChild)
       this.setFlipEvents(deck)
       this.setStartPosition(deck)
       this.keyHandler(deck)
+      this.startTimer()
     })
   }
 
@@ -257,6 +263,30 @@ export class Memory {
    */
   attemptsPlus () {
     document.getElementById(`${this.parentWindow.UUID}-attempts`).textContent = `${++this.attempts}`
+  }
+
+  /**
+   * Increase the timer by one.
+   *
+   * @param {Memory} that Instance of this
+   */
+  timerPlus (that) {
+    that.timer.count = parseInt(++document.getElementById(`${that.parentWindow.UUID}-timer`).textContent)
+    document.getElementById(`${that.parentWindow.UUID}-timer`).textContent = that.timer.count
+  }
+
+  /**
+   * Sets an update interval of 1000 ms for the timer.
+   */
+  startTimer () {
+    this.timer.id = setInterval(this.timerPlus, 1000, this)
+  }
+
+  /**
+   * Stops the interval.
+   */
+  stopTimer () {
+    clearInterval(this.timer.id)
   }
 
   /**

@@ -1,8 +1,9 @@
 'use strict'
 
 // Imports
-import { getMenu, getQuiz, checkAnswer, startCount, resetInfo } from '../../views/quizViews'
+import { getMenu, getQuiz, checkAnswer, resetInfo } from '../../views/quizViews'
 import { valueExists } from '../../helpers/storage'
+import { Timer } from '../../helpers/timer'
 import { Window } from '../../views/window'
 
 /**
@@ -10,6 +11,7 @@ import { Window } from '../../views/window'
  */
 export class Quiz {
   parentWindow
+  timer
   info = {
     args: [true],
     nickname: '',
@@ -21,6 +23,7 @@ export class Quiz {
    */
   constructor () {
     this.parentWindow = new Window()
+    this.timer = new Timer(10, this.parentWindow.UUID, true)
     this.start()
   }
 
@@ -109,9 +112,9 @@ export class Quiz {
    */
   async loadQuiz () {
     try {
-      this.parentWindow.switchView(await getQuiz(this.info.questionNum), document.getElementById(this.parentWindow.UUID).lastChild)
+      this.parentWindow.switchView(await getQuiz(this.info.questionNum, this.timer), document.getElementById(this.parentWindow.UUID).lastChild)
       this.setSendAnswerListener()
-      startCount()
+      this.timer.startCount()
       this.incrementQuestionNumber()
     } catch (error) {
       console.error(error)

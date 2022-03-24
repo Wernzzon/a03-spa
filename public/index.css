@@ -218,6 +218,11 @@ body {
   text-align: center;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
 /* Background */
 .background1 {
   background-image: url('/images/backgrounds/back1.gif');

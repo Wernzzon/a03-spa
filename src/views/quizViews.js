@@ -5,7 +5,7 @@ import { createMenuElements, createQuizElements, createGeneric, getCheckedButton
 import { gatherInfo, answerIsAlternatives, resetAltExists, getURL, setNextURL, resetInfo } from '../apps/quiz/updateContent'
 import { sendAnswerToServer } from '../apps/quiz/sendContent'
 import { saveValues } from '../helpers/storage'
-import { getTimeTaken, startCount } from '../apps/quiz/timer'
+import { Timer } from '../helpers/timer'
 
 /**
  * Sets title of HTML doc, calls to create HTML elements.
@@ -21,12 +21,13 @@ function getMenu (params) {
  * Gets info for quiz question, calls to create HTML elements.
  *
  * @param {number} questionNum Number of the question
+ * @param {Timer} timer Timer for a question
  * @returns {HTMLDivElement} Returns quiz elements
  */
-async function getQuiz (questionNum) {
+async function getQuiz (questionNum, timer) {
   try {
     const data = await gatherInfo() // await needed?
-    return createQuizElements(data, questionNum)
+    return createQuizElements(data, questionNum, timer)
   } catch (err) {
     console.error(err)
   }
@@ -37,9 +38,10 @@ async function getQuiz (questionNum) {
  *
  * @param {string} id Id of window
  * @param {string} nickname To be stored
+ * @param {Timer} timer Timer
  * @returns {boolean} True or false
  */
-async function checkAnswer (id, nickname) {
+async function checkAnswer (id, nickname, timer) {
   try {
     const answer = getAnswerFromUser(id)
     const success = await sendAnswerToServer(getURL(), answer)
@@ -49,7 +51,7 @@ async function checkAnswer (id, nickname) {
     }
 
     if (success[0] === 'Complete') {
-      const time = getTimeTaken()
+      const time = timer.getTimeTaken()
       saveValues('highscores', [nickname, time])
       return [true, createGeneric('QUIZ COMPLETE!', success[1], 'Click for menu', true)]
     }
@@ -80,6 +82,5 @@ export {
   getMenu,
   getQuiz,
   checkAnswer,
-  startCount,
   resetInfo
 }

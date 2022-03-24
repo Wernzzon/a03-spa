@@ -48,6 +48,5 @@ function addApp (appName) {
   }
   if (appName === apps[3]) {
     return new Memory()
-    // TODO: Timer
   }
 }

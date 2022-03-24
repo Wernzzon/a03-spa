@@ -1,8 +1,8 @@
 'use strict'
 
 // Imports
-import { timerElements } from '../apps/quiz/timer'
 import { getTopFiveTimes } from '../helpers/storage'
+import { Timer } from '../helpers/timer'
 
 let checkedButton
 
@@ -54,12 +54,13 @@ function createMenuElements (params) {
 /**
  * Creates HTML elements for the quiz question, and appends them to be visible.
  *
- * @param {object} params Data from server to be showed for user
+ * @param {object} data Data from server to be showen for user
  * @param {number} counter Number of question
+ * @param {Timer} timer Timer for a question
  *
  * @returns {HTMLDivElement} Container
  */
-function createQuizElements (params, counter) {
+function createQuizElements (data, counter, timer) {
   const container = document.createElement('div')
   container.id = 'quizQuestion'
 
@@ -69,17 +70,16 @@ function createQuizElements (params, counter) {
 
   const question = document.createElement('p')
   question.id = 'question'
-  question.textContent = params.question
+  question.textContent = data.question
 
-  const timer = document.createElement('span')
-  timer.id = 'timer'
+  const time = timer.timerElement()
 
   const answerContainer = document.createElement('div')
   answerContainer.id = 'answerContainer'
 
-  if (params.alternatives !== undefined) {
+  if (data.alternatives !== undefined) {
     const altWrapper = document.createElement('div')
-    for (const [key, value] of Object.entries(params.alternatives)) {
+    for (const [key, value] of Object.entries(data.alternatives)) {
       const alt = document.createElement('input')
       alt.type = 'radio'
       alt.id = key
@@ -101,7 +101,7 @@ function createQuizElements (params, counter) {
     answerContainer.append(altWrapper)
   }
 
-  if (params.alternatives === undefined) {
+  if (data.alternatives === undefined) {
     const textAnswer = document.createElement('input')
     textAnswer.type = 'text'
     textAnswer.id = 'answer'
@@ -112,9 +112,8 @@ function createQuizElements (params, counter) {
 
   container.append(numOfQuestion)
   container.append(question)
-  container.append(timer)
+  container.append(time)
   container.append(answerContainer)
-  setupTimer(10, timer.id)
 
   return container
 }
@@ -250,16 +249,6 @@ function createSubmitButton () {
  */
 function getCheckedButton () {
   return checkedButton
-}
-
-/**
- * Set timer with duration and the id of the HTML element.
- *
- * @param {number} durationOfQuestion Time in seconds the timer should go on for
- * @param {string} idOfElement HTML element for updates
- */
-function setupTimer (durationOfQuestion, idOfElement) {
-  timerElements(durationOfQuestion, idOfElement)
 }
 
 export {
