@@ -323,6 +323,9 @@ export class Memory {
               break
           }
           break
+        case 'Enter':
+          this.flipCard(deck, this.cardAtPosition)
+          break
       }
     })
   }
