@@ -11,6 +11,10 @@ export class Settings {
    * Constructor.
    */
   constructor () {
+    if (Settings._instance) {
+      return console.error('Settings can only be instantiated once.')
+    }
+    Settings._instance = this
     this.parentWindow = new Window()
     this.parentWindow.addApp(this.createElements())
     this.parentWindow.show()

@@ -4,7 +4,7 @@ import { createDesktop } from './views/desktopView'
 import { Memory } from './apps/memory/game'
 import { Quiz } from './apps/quiz/quizStart'
 import { Chat } from './views/chatView'
-import { Settings } from './helpers/backgroundSettings'
+import { Settings } from './helpers/settings'
 
 window.addEventListener('load', main)
 const apps = ['settings', 'quiz', 'chat', 'memory']

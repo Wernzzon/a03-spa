@@ -4,7 +4,7 @@
 import { Chat } from './chatView'
 import { Quiz } from '../apps/quiz/quizStart'
 import { Memory } from '../apps/memory/game'
-import { Settings } from '../helpers/backgroundSettings'
+import { Settings } from '../helpers/settings'
 import { dragElement } from '../helpers/dragAndDropHelper'
 import { v4 as uuidv4 } from 'uuid'
 
