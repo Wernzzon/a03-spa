@@ -72,7 +72,7 @@ function createQuizElements (data, counter, timer) {
   question.id = 'question'
   question.textContent = data.question
 
-  const time = timer.timerElement()
+  const time = timer.elmt()
 
   const answerContainer = document.createElement('div')
   answerContainer.id = 'answerContainer'

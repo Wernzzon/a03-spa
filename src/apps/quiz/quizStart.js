@@ -23,7 +23,7 @@ export class Quiz {
    */
   constructor () {
     this.parentWindow = new Window()
-    this.timer = new Timer(10, this.parentWindow.UUID, true)
+    this.timer = new Timer(10, this.parentWindow.UUID)
     this.start()
   }
 
@@ -87,7 +87,6 @@ export class Quiz {
   saveNickname () {
     const res = []
     const chosenNickname = document.getElementById(this.parentWindow.UUID).lastChild.firstChild.nextSibling.nextSibling.value
-    console.log(chosenNickname)
     if (chosenNickname === '') {
       res[0] = false
       res[1] = 'Nickname cannot be empty'
@@ -113,8 +112,8 @@ export class Quiz {
   async loadQuiz () {
     try {
       this.parentWindow.switchView(await getQuiz(this.info.questionNum, this.timer), document.getElementById(this.parentWindow.UUID).lastChild)
-      this.setSendAnswerListener()
       this.timer.startCount()
+      this.setSendAnswerListener()
       this.incrementQuestionNumber()
     } catch (error) {
       console.error(error)

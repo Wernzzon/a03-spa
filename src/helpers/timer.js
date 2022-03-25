@@ -4,15 +4,13 @@
  * Timer
  */
 export class Timer {
-  elmt
   info = {
     setDuration: 0,
     durationCount: 0,
     timeTaken: 0,
     t: 0,
     timerIsOn: false,
-    id: '',
-    inQuizOrMemory: true
+    id: ''
   }
 
   /**
@@ -20,13 +18,11 @@ export class Timer {
    *
    * @param {number} duration Duration of timer in seconds
    * @param {string} id Id of window
-   * @param {boolean} quizOrGame Whether or not the timer is for the quiz or memory
    */
-  constructor (duration, id, quizOrGame) {
+  constructor (duration, id) {
     this.info.setDuration = duration
     this.info.id = id
-    this.info.inQuizOrMemory = quizOrGame
-    this.elmt = document.createElement('span')
+    this._elmt = document.createElement('span')
   }
 
   /**
@@ -36,7 +32,7 @@ export class Timer {
   timedCount () {
     if (this.timerIsDone()) return
 
-    this.elmt.textContent = this.info.setDuration - this.info.durationCount++
+    this.elmt().textContent = this.info.setDuration - this.info.durationCount++
     this.info.t = setTimeout(this.timedCount, 1000)
   }
 
@@ -101,7 +97,7 @@ export class Timer {
    *
    * @returns {HTMLSpanElement} Timer element
    */
-  get timerElement () {
-    return this.elmt
+  get elmt () {
+    return this._elmt
   }
 }
