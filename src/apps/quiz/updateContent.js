@@ -25,7 +25,7 @@ export async function gatherInfo (info) {
     if (data.alternatives) newInfo.alt = true
 
     return [data, newInfo]
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
   }
 }

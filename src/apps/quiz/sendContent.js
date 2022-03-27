@@ -24,8 +24,8 @@ async function sendAnswerToServer (urlToSendTo, userAnswer) {
     }
 
     return data
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
   }
 }
 

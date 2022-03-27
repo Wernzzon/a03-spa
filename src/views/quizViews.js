@@ -42,7 +42,6 @@ async function getQuiz (timer, info) {
  */
 async function checkAnswer (id, info) {
   try {
-    console.log(info)
     const answer = getAnswerFromUser(id, info)
     const success = await sendAnswerToServer(info.nextURL, answer)
 
@@ -60,8 +59,8 @@ async function checkAnswer (id, info) {
       createGeneric('Correct!', success.message, 'Next Question', false),
       { first: info.firstCall, next: success.nextURL, alt: false }
     ]
-  } catch (error) {
-    console.log(error)
+  } catch (err) {
+    console.error(err)
   }
 }
 

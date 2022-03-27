@@ -115,6 +115,7 @@ body {
 .cardHolder.noMatch {
   box-shadow: 0 0 2.5rem crimson;
 }
+
 .cardHolder.position {
   box-shadow: 0 0 2.5rem blue;
 }

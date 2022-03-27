@@ -133,7 +133,6 @@ export class Quiz {
     try {
       const resp = await checkAnswer(this.parentWindow.UUID, this.info)
       this.parentWindow.switchView(resp[1], document.getElementById(this.parentWindow.UUID).lastChild)
-      console.log(resp)
       if (!resp[0]) {
         this.setNewInfo(resp[2])
         document.getElementById(this.parentWindow.UUID).lastChild.lastChild.addEventListener('click', () => {
@@ -144,8 +143,8 @@ export class Quiz {
           that.restart()
         })
       }
-    } catch (error) {
-      console.log(error)
+    } catch (err) {
+      console.error(err)
     }
   }
 

@@ -41,7 +41,6 @@ function addApp (appName) {
   }
   if (appName === apps[1]) {
     return new Quiz()
-    // FIXME: Some funky behavior
   }
   if (appName === apps[2]) {
     return new Chat()
