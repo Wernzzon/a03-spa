@@ -41,22 +41,20 @@ async function sendQuestionResponsePost (url, answer) {
 
   try {
     const response = await fetch(url, data)
+    const parsedData = await response.json()
 
     if (response.status !== 200) {
-      const data = await response.json()
-      return ['GameOver', data.message]
+      return ['GameOver', parsedData.message]
     }
 
     if (!response.ok) {
-      const data = await response.json()
-
       console.log(response)
-      console.log(JSON.stringify(data, null, 4))
+      console.log(JSON.stringify(parsedData, null, 4))
 
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 
-    return await response.json()
+    return parsedData
   } catch (error) {
     console.error(error)
   }

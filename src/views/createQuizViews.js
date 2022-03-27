@@ -2,9 +2,8 @@
 
 // Imports
 import { getTopFiveTimes } from '../helpers/storage'
-import { Timer } from '../helpers/timer'
 
-let checkedButton
+let checkedButton = false
 
 /**
  * Creates HTML elements for the menu, and appends them to be visible.
@@ -56,7 +55,7 @@ function createMenuElements (params) {
  *
  * @param {object} data Data from server to be showen for user
  * @param {number} counter Number of question
- * @param {Timer} timer Timer for a question
+ * @param {HTMLSpanElement} timer Timer for a question
  *
  * @returns {HTMLDivElement} Container
  */
@@ -72,7 +71,7 @@ function createQuizElements (data, counter, timer) {
   question.id = 'question'
   question.textContent = data.question
 
-  const time = timer.elmt()
+  const time = timer
 
   const answerContainer = document.createElement('div')
   answerContainer.id = 'answerContainer'
@@ -143,10 +142,10 @@ function createGeneric (h1Text, serverMsg, reloadOrNext, score) {
   action.classList.add('large')
   action.textContent = reloadOrNext
 
-  container.append(h1)
-  container.append(message)
-  container.append(action)
-  if (score) container.append(createHighscore())
+  container.appendChild(h1)
+  container.appendChild(message)
+  container.appendChild(action)
+  if (score) container.appendChild(createHighscore())
 
   return container
 }
@@ -165,19 +164,29 @@ function createHighscore () {
   const scoreTitle = document.createElement('h3')
   scoreTitle.classList.add('medium')
   scoreTitle.textContent = 'Highscores'
-  wrapper.append(scoreTitle)
+  wrapper.appendChild(scoreTitle)
 
   const topFive = getTopFiveTimes()
-  if (topFive) {
-    wrapper.append(makeTable(topFive))
-  } else {
-    const noScore = document.createElement('p')
-    noScore.classList.add('medium')
-    noScore.textContent = 'No highscores to show!'
-    wrapper.append(noScore)
+
+  if (!topFive) {
+    wrapper.appendChild(noScoreAvailable())
+    return wrapper
   }
+  wrapper.appendChild(makeTable(topFive))
 
   return wrapper
+}
+
+/**
+ * Creates p tag if there is no scores.
+ *
+ * @returns {HTMLParagraphElement} Paragraph element
+ */
+function noScoreAvailable () {
+  const noScore = document.createElement('p')
+  noScore.classList.add('medium')
+  noScore.textContent = 'No highscores to show!'
+  return noScore
 }
 
 /**
@@ -243,9 +252,9 @@ function createSubmitButton () {
 }
 
 /**
- * Returns the button id, that is checked.
+ * Returns the button id, if any is checked otherwise false.
  *
- * @returns {string} Button id
+ * @returns {string | boolean} Button id or false
  */
 function getCheckedButton () {
   return checkedButton

@@ -1,9 +1,9 @@
 'use strict'
 
 // Imports
-import { getMenu, getQuiz, checkAnswer, resetInfo } from '../../views/quizViews'
+import { getMenu, getQuiz, checkAnswer } from '../../views/quizViews'
 import { valueExists } from '../../helpers/storage'
-import { Timer } from '../../helpers/timer'
+import { getElmt, setup, startCount } from './timer'
 import { Window } from '../../views/window'
 
 /**
@@ -15,7 +15,10 @@ export class Quiz {
   info = {
     args: [true],
     nickname: '',
-    questionNum: 1
+    questionNum: 1,
+    firstCall: true,
+    altExists: false,
+    nextURL: ''
   }
 
   /**
@@ -23,7 +26,7 @@ export class Quiz {
    */
   constructor () {
     this.parentWindow = new Window()
-    this.timer = new Timer(10, this.parentWindow.UUID)
+    setup(10, this.parentWindow.UUID)
     this.start()
   }
 
@@ -111,8 +114,10 @@ export class Quiz {
    */
   async loadQuiz () {
     try {
-      this.parentWindow.switchView(await getQuiz(this.info.questionNum, this.timer), document.getElementById(this.parentWindow.UUID).lastChild)
-      this.timer.startCount()
+      const [newInfo, question] = await getQuiz(getElmt(), this.info)
+      this.parentWindow.switchView(question, document.getElementById(this.parentWindow.UUID).lastChild)
+      startCount()
+      this.setNewInfo(newInfo)
       this.setSendAnswerListener()
       this.incrementQuestionNumber()
     } catch (error) {
@@ -126,9 +131,11 @@ export class Quiz {
   async loadAnswer () {
     const that = this
     try {
-      const resp = await checkAnswer(this.parentWindow.UUID, this.info.nickname)
+      const resp = await checkAnswer(this.parentWindow.UUID, this.info)
       this.parentWindow.switchView(resp[1], document.getElementById(this.parentWindow.UUID).lastChild)
+      console.log(resp)
       if (!resp[0]) {
+        this.setNewInfo(resp[2])
         document.getElementById(this.parentWindow.UUID).lastChild.lastChild.addEventListener('click', () => {
           that.loadQuiz()
         })
@@ -154,9 +161,19 @@ export class Quiz {
    */
   restart () {
     this.info = this.resetInfo()
-    resetInfo()
     this.parentWindow.removeApp()
     this.start()
+  }
+
+  /**
+   * Sets the new params for the questions.
+   *
+   * @param {object} newInfo Object containing the info
+   */
+  setNewInfo (newInfo) {
+    this.info.firstCall = newInfo.first
+    this.info.nextURL = newInfo.next
+    this.info.altExists = newInfo.alt
   }
 
   /**
@@ -168,7 +185,10 @@ export class Quiz {
     return {
       args: [true],
       nickname: '',
-      questionNum: 1
+      questionNum: 1,
+      firstCall: true,
+      altExists: false,
+      nextURL: ''
     }
   }
 }

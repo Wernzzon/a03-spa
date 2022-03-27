@@ -3,80 +3,29 @@
 // Imports
 import { getFirstQuestion, getQuestion } from './quiz'
 
-const info = {
-  firstCall: true,
-  altExists: false,
-  nextURL: ''
-}
-
 /**
  * Get first question if firstCall is true, else get next question in quiz.
  *
- * @returns {Array} Data from server
+ * @param {object} info info
+ * @returns {object} Data from server
  */
-async function gatherInfo () {
+export async function gatherInfo (info) {
   try {
+    const newInfo = {
+      first: false,
+      next: '',
+      alt: false
+    }
+
     const response = info.firstCall ? await getFirstQuestion() : await getQuestion(info.nextURL)
-    if (info.firstCall) info.firstCall = false
 
     const data = await response.json()
-    info.nextURL = data.nextURL
-    if (data.alternatives) info.altExists = true
+    newInfo.next = data.nextURL
+    if (info.firstCall) newInfo.first = false
+    if (data.alternatives) newInfo.alt = true
 
-    return data
+    return [data, newInfo]
   } catch (error) {
     console.log(error)
   }
-}
-
-/**
- * Send back true if answer input is in form of radio buttons, else false.
- *
- * @returns {boolean} True or false
- */
-function answerIsAlternatives () {
-  return info.altExists
-}
-
-/**
- * Resets altExists to false if it has been true.
- */
-function resetAltExists () {
-  info.altExists = false
-}
-
-/**
- * Return the next URL to make a call to.
- *
- * @returns {string} Next URL to make a call to
- */
-function getURL () {
-  return info.nextURL
-}
-
-/**
- * Sets the next URL to make a call to.
- *
- * @param {string} url Next URL to make a call to
- */
-function setNextURL (url) {
-  info.nextURL = url
-}
-
-/**
- * Resets info for pulling correct content.
- */
-function resetInfo () {
-  info.firstCall = true
-  info.altExists = false
-  info.nextURL = ''
-}
-
-export {
-  gatherInfo,
-  answerIsAlternatives,
-  resetAltExists,
-  getURL,
-  setNextURL,
-  resetInfo
 }
