@@ -40,7 +40,6 @@ export class Memory {
 
   hasFlippedCard = false
   lockboard = false
-  thisWindowId
   attempts = 0
   timer = {
     id: '',
@@ -76,8 +75,6 @@ export class Memory {
    *
    * @param {Deck} deck Deck of cards
    * @param {Card} card Card clicked
-   *
-   * @returns {undefined} Nothing
    */
   flipCard (deck, card) {
     if (this.lockboard) return
