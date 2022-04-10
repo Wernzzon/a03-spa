@@ -44,6 +44,7 @@ export class Quiz {
    */
   loadMenu () {
     this.parentWindow.switchView(getMenu(this.info.args), document.getElementById(this.parentWindow.UUID).lastChild)
+    this.setNewGameListener()
   }
 
   /**
@@ -72,13 +73,12 @@ export class Quiz {
    */
   checkpoint () {
     const res = this.saveNickname()
-    if (!res[0]) {
-      this.info.args = res
+    if (!res) {
       this.loadMenu()
       return
     }
 
-    this.info.nickname = res[1]
+    this.info.nickname = res
     this.loadQuiz()
   }
 
@@ -88,25 +88,18 @@ export class Quiz {
    * @returns {Array} Returns false if nickname is empty or exists in local storage
    */
   saveNickname () {
-    const res = []
     const chosenNickname = document.getElementById(this.parentWindow.UUID).lastChild.firstChild.nextSibling.nextSibling.value
     if (chosenNickname === '') {
-      res[0] = false
-      res[1] = 'Nickname cannot be empty'
-      return res
+      alert('Nickname cannot be empty')
+      return false
     }
 
-    if (chosenNickname) {
-      if (valueExists(chosenNickname)) {
-        res[0] = false
-        res[1] = 'Nickname already exists'
-        return res
-      }
+    if (valueExists('highscores', chosenNickname)) {
+      alert('Nickname already exists')
+      return false
     }
 
-    res[0] = true
-    res[1] = chosenNickname
-    return res
+    return chosenNickname
   }
 
   /**
