@@ -16,6 +16,11 @@ export class Settings {
     }
     Settings._instance = this
     this.parentWindow = new Window()
+
+    this.parentWindow.elem.closeBtn.addEventListener('click', () => {
+      Settings._instance = null
+    })
+
     this.parentWindow.addApp(this.createElements())
     this.parentWindow.show()
   }
