@@ -148,7 +148,7 @@ export class Client {
    */
   getSavedMessages () {
     const archive = getFormattedValues(this.chatInfo.channel, false)
-    if (!archive) return
+    if (!archive[0]) return
 
     archive.forEach(arr => {
       this.receive(arr, false)

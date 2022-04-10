@@ -51,7 +51,7 @@ function getTopFiveTimes () {
  */
 function getFormattedValues (key, compare) {
   const archive = getLocalValues(key)
-  if (!archive) return [false, false]
+  if (!archive || archive === 'null') return [false, false]
 
   return compare ? format(archive) : format(archive)[1]
 }
